@@ -4,46 +4,52 @@ import { Component } from '@angular/core';
   selector: 'app-home',
   standalone: true,
   template: `
-    <div>
-      <a href="https://analogjs.org/" target="_blank">
-        <img alt="Analog Logo" class="logo analog" src="/analog.svg" />
-      </a>
+    <div class="heading">
+      <h2>Scuro Guardiano</h2>
+      <p>Welcome to my unholy temple~</p>
     </div>
-
-    <h2>Analog</h2>
-
-    <h3>The fullstack meta-framework for Angular!</h3>
-
-    <div class="card">
-      <button type="button" (click)="increment()">Count {{ count }}</button>
+    <div class="content">
+      <section class="projects">
+        <h3>Featured projects</h3>
+      </section>
+      <section class="posts">
+        <h3>Recent blog posts</h3>
+      </section>
     </div>
-
-    <p class="read-the-docs">
-      For guides on how to customize this project, visit the
-      <a href="https://analogjs.org" target="_blank">Analog documentation</a>
-    </p>
   `,
   styles: [
     `
-      .logo {
-        will-change: filter;
+      :host {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
       }
-      .logo:hover {
-        filter: drop-shadow(0 0 2em #646cffaa);
+      .heading {
+        max-width: 600px;
+        text-align: center;
       }
-      .logo.angular:hover {
-        filter: drop-shadow(0 0 2em #42b883aa);
+      .heading h2 {
+        font-size: 300%;
+        color: var(--fg-4);
+        margin-bottom: 0;
       }
-      .read-the-docs {
-        color: #888;
+      .heading p {
+        color: var(--fg-3);
       }
-    `,
+
+      .content {
+        width: 100%;
+        display: flex;
+      }
+      .content > * {
+        flex: 1;
+      }
+      .content > section > h3 {
+        text-align: center;
+      }
+    `
   ],
 })
 export default class HomeComponent {
-  count = 0;
 
-  increment() {
-    this.count++;
-  }
 }

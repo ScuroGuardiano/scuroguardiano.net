@@ -1,0 +1,22 @@
+<header>
+  <ul class="menu" *transloco="let t; read: 'header'">
+    <li>
+      <a routerLink="/">{{ t('home') }}</a>
+    </li>
+    <li>
+      <a routerLink="/projects">{{ t('projects') }}</a>
+    </li>
+    <li>
+      <a routerLink="/blog">{{ t('blog') }}</a>
+    </li>
+    <li>
+      <a routerLink="/about">{{ t('about') }}</a>
+    </li>
+  </ul>
+</header>
+<main>
+  <ng-content></ng-content>
+</main>
+<footer>
+  <p>Copyright © 2024 Scuro Guardiano</p>
+</footer>
