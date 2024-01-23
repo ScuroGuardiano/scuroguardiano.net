@@ -6,7 +6,7 @@ import { APP_BASE_HREF } from "@angular/common";
 @Injectable({ providedIn: 'root' })
 export class TranslocoHttpLoader implements TranslocoLoader {
   private http = inject(HttpClient);
-  private baseHref = inject(APP_BASE_HREF);
+  private baseHref = inject(APP_BASE_HREF, { optional: true }) ?? "";
 
   getTranslation(lang: string) {
     return this.http.get<Translation>(`${this.baseHref}/i18n/${lang}.json`);

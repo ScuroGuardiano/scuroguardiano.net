@@ -1,0 +1,5 @@
+@if (isBrowser) {
+  @for (particle of particles(); track $index) {
+    <app-particle [areaWidth]="width()" [areaHeight]="height()"></app-particle>
+  }
+}
