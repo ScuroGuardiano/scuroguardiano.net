@@ -1,36 +1,28 @@
-import { AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, PLATFORM_ID, QueryList, ViewChildren, computed, inject, input, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, PLATFORM_ID, QueryList, ViewChild, ViewChildren, computed, inject, input, signal } from '@angular/core';
 import { ParticleComponent } from './particle.component';
 import { isPlatformBrowser } from '@angular/common';
+import { ParticlesController } from './particles-controller';
+import IRenderer from './renderer';
+import Canvas2DRenderer from './canvas2d.renderer';
 
 @Component({
   selector: 'app-particles',
   standalone: true,
-  imports: [ParticleComponent],
+  imports: [],
   templateUrl: './particles.component.html',
   styleUrl: './particles.component.css',
   host: { ngSkipHydration: 'true' },
 })
-export class ParticlesComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ParticlesComponent implements OnDestroy, AfterViewInit {
   #elementRef = inject(ElementRef) as ElementRef<HTMLElement>;
+  @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
   #zone = inject(NgZone);
-  @ViewChildren(ParticleComponent) particleComponents!: QueryList<ParticleComponent>;
-
   particlesCount = input(300, { alias: "particles" });
-  particles = computed(() => Array(this.particlesCount()).fill(0).map((x, i) => i + 1));
-  width = signal(0);
-  height = signal(0);
   destroyed = false;
 
-  private platformId = inject(PLATFORM_ID);
+  particlesController = new ParticlesController(this.particlesCount());
+  renderer?: IRenderer;
 
-  get isBrowser() {
-    return isPlatformBrowser(this.platformId);
-  }
-
-  ngOnInit(): void {
-    this.width.set(this.#elementRef.nativeElement.clientWidth);
-    this.height.set(this.#elementRef.nativeElement.clientHeight);
-  }
   ngOnDestroy(): void {
     this.destroyed = true;
   }
@@ -38,15 +30,25 @@ export class ParticlesComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.isBrowser) {
       return;
     }
+
     this.#zone.runOutsideAngular(() => {
+      this.renderer = new Canvas2DRenderer(this.canvas.nativeElement);
+      this.particlesController.init();
       requestAnimationFrame(this.animate.bind(this));
     });
+
+    this.onResize();
+  }
+
+  private platformId = inject(PLATFORM_ID);
+
+  get isBrowser() {
+    return isPlatformBrowser(this.platformId);
   }
 
   @HostListener("window:resize")
   onResize() {
-    this.width.set(this.#elementRef.nativeElement.clientWidth);
-    this.height.set(this.#elementRef.nativeElement.clientHeight);
+    this.renderer?.onResize();
   }
 
   #lastTime = 0;
@@ -60,7 +62,9 @@ export class ParticlesComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     const elapsed = timestamp - this.#lastTime;
 
-    this.particleComponents.forEach(p => p.update(elapsed / 1000));
+    this.particlesController.update(elapsed / 1000);
+    this.renderer!.render(this.particlesController.particles);
+
     requestAnimationFrame(this.animate.bind(this));
     this.#lastTime = timestamp;
   }
