@@ -132,7 +132,13 @@ class Particle implements IParticle {
   update(dt: number) {
     // Each second I want some change for the particle to respawn
     // It won't be too accurate, by I will scale it with DT
-    const chance = this.chanceToDespawn * dt;
+    let chance = this.chanceToDespawn * dt;
+
+    // To avoid despawning it all when on ALT-TAB, I will add limit to 1 second here ^^
+    if (chance > this.chanceToDespawn) {
+      chance = this.chanceToDespawn;
+    }
+
     const roll = Math.random();
     if (roll <= chance) {
       this.despawn();
