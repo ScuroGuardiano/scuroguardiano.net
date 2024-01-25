@@ -30,7 +30,7 @@ export default class Canvas2DRenderer implements IRenderer {
       ctx.arc(
         p.x * width,
         p.y * height,
-        p.size * p.fade,
+        p.size,
         0,
         Math.PI * 2
       );

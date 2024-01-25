@@ -19,7 +19,7 @@ export interface IParticle {
   readonly y: number;
   readonly size: ParticleSize;
 
-  // Fade from 0 to 1, renderer should multiply opacity and size by fade value.
+  // Fade from 0 to 1, renderer should multiply opacity by fade value.
   readonly fade: number;
 }
 
