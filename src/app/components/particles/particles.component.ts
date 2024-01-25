@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, PLATFORM_ID, QueryList, ViewChild, ViewChildren, computed, inject, input, signal } from '@angular/core';
-import { ParticleComponent } from './particle.component';
+import { AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, PLATFORM_ID, ViewChild, inject, input } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ParticlesController } from './particles-controller';
 import IRenderer from './renderer';
@@ -14,10 +13,9 @@ import Canvas2DRenderer from './canvas2d.renderer';
   host: { ngSkipHydration: 'true' },
 })
 export class ParticlesComponent implements OnDestroy, AfterViewInit {
-  #elementRef = inject(ElementRef) as ElementRef<HTMLElement>;
   @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
   #zone = inject(NgZone);
-  particlesCount = input(300, { alias: "particles" });
+  particlesCount = input(100, { alias: "particles" });
   destroyed = false;
 
   particlesController = new ParticlesController(this.particlesCount());

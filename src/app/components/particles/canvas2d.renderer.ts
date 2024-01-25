@@ -20,15 +20,22 @@ export default class Canvas2DRenderer implements IRenderer {
     const { width, height } = ctx.canvas;
 
     ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = 'white';
+    ctx.shadowBlur = 4;
+    ctx.shadowColor = "rgb(255, 255, 255)";
 
     particles.forEach(p => {
-      ctx.fillRect(
+      const opacity = 0.3 * p.fade;
+      ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+      ctx.beginPath();
+      ctx.arc(
         p.x * width,
         p.y * height,
-        p.size,
-        p.size
+        p.size * p.fade,
+        0,
+        Math.PI * 2
       );
+      ctx.fill();
+      ctx.closePath();
     });
   }
 
