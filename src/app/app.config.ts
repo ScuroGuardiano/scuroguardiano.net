@@ -4,6 +4,7 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideFileRouter } from '@analogjs/router';
 import { TranslocoHttpLoader } from './transloco-loader';
 import { provideTransloco } from '@ngneat/transloco';
+import { provideTranslocoLocale } from '@ngneat/transloco-locale';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,15 +13,21 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideHttpClient(),
     provideTransloco({
-        config: {
-          availableLangs: ['pl', 'en'],
-          fallbackLang: 'en',
-          defaultLang: 'pl',
-          // Remove this option if your application doesn't support changing language in runtime.
-          reRenderOnLangChange: true,
-          prodMode: !isDevMode(),
-        },
-        loader: TranslocoHttpLoader
-      }),
+      config: {
+        availableLangs: ['pl', 'en'],
+        fallbackLang: 'en',
+        defaultLang: 'pl',
+        // Remove this option if your application doesn't support changing language in runtime.
+        reRenderOnLangChange: true,
+        prodMode: !isDevMode(),
+      },
+      loader: TranslocoHttpLoader
+    }),
+    provideTranslocoLocale({
+      langToLocaleMapping: {
+        en: 'en-US',
+        pl: 'pl-PL'
+      }
+    })
   ],
 };

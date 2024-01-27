@@ -1,28 +1,26 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { BlogService, PostMetadata, SingleLangPostMetadata } from '../services/blog.service';
 import { firstValueFrom } from 'rxjs';
 import { TranslocoService } from '@ngneat/transloco';
+import { BlogPostsListComponent } from '../components/blog-posts-list/blog-posts-list.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
+  imports: [BlogPostsListComponent],
   template: `
     <div class="heading">
-      <h2>Scuro Guardiano<br>WORK IN PROGRESS</h2>
+      <h2>Scuro Guardiano<!--<br>WORK IN PROGRESS--></h2>
       <p>Welcome to my unholy temple~</p>
     </div>
-    <div class="content">
+    <div class="content reading-width">
       <section class="projects">
         <h3>Featured projects</h3>
       </section>
       <section class="posts">
         <h3>Recent blog posts</h3>
         @if (posts) {
-        <ul>
-          @for (post of posts; track post.key) {
-            <li>{{ post.title }}</li>
-          }
-        </ul>
+          <app-blog-posts-list [posts]="posts" [show]="4" />
         }
       </section>
     </div>
@@ -48,7 +46,7 @@ import { TranslocoService } from '@ngneat/transloco';
       }
 
       .content {
-        width: 100%;
+        gap: 2rem;
         display: flex;
       }
       .content > * {
@@ -63,6 +61,7 @@ import { TranslocoService } from '@ngneat/transloco';
 export default class HomeComponent implements OnInit {
   #blogService = inject(BlogService);
   #translocoService = inject(TranslocoService);
+  #changeDetectorRef = inject(ChangeDetectorRef);
   posts?: SingleLangPostMetadata[];
 
   async ngOnInit(): Promise<void> {
@@ -71,5 +70,6 @@ export default class HomeComponent implements OnInit {
       this.#translocoService.getActiveLang(),
       'en' // Fallback language will be always en
     ));
+    this.#changeDetectorRef.detectChanges();
   }
 }

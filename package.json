@@ -26,6 +26,7 @@
     "@angular/platform-server": "^17.1.0",
     "@angular/router": "^17.1.0",
     "@ngneat/transloco": "^6.0.4",
+    "@ngneat/transloco-locale": "^5.1.2",
     "@nx/angular": "~17.1.0",
     "front-matter": "^4.0.2",
     "gray-matter": "^4.0.3",

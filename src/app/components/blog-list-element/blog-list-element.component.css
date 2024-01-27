@@ -1,0 +1,8 @@
+.second-line {
+  display: flex;
+  gap: .5rem;
+}
+
+.lang {
+  text-transform: uppercase;
+}

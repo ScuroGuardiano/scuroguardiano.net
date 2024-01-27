@@ -1,7 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of, tap } from 'rxjs';
 
 export interface PostLanguageVersion {
   lang: string;
@@ -37,11 +37,19 @@ export class BlogService {
   readonly #baseHref = inject(APP_BASE_HREF, { optional: true }) ?? "";
   readonly #blogBasePath = this.#baseHref + "/__sg/blog";
   readonly #postListPath = this.#blogBasePath + "/posts.json";
+  readonly #blogBaseUrl = "/blog";
+
+  #cachedPosts?: PostMetadata[];
 
   listPosts(): Observable<PostMetadata[]> {
+    if (this.#cachedPosts) {
+      return of(this.#cachedPosts);
+    }
+
     return this.#http.get<PostMetadataGen<string>[]>(this.#postListPath)
       .pipe(
-        map(res => res.map(m => ({ ...m, date: new Date(m.date) })))
+        map(res => res.map(m => ({ ...m, date: new Date(m.date) }))),
+        tap(res => this.#cachedPosts = res)
       );
   }
 
@@ -81,5 +89,9 @@ export class BlogService {
       date: post.date,
       ...langVer
     }
+  }
+
+  getUrlForPost(postPath: string) {
+    return this.#blogBaseUrl + '/' + postPath.replace('.html', '');
   }
 }

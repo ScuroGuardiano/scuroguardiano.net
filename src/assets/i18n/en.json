@@ -4,5 +4,8 @@
     "projects": "Projects",
     "blog": "Blog",
     "about": "About"
+  },
+  "blog": {
+    "heading": "Blog posts"
   }
 }

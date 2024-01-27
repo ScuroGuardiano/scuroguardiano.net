@@ -40,14 +40,22 @@ async function createDirIfNotExists(path) {
  * @param { any } mattered
  */
 function blogMetadata(relativePath, mattered) {
-  const key = path.parse(relativePath).name;
+  const originalPathParsed = path.parse(relativePath);
+  const key = originalPathParsed.name;
   const date = mattered.date;
+
+  const targetPath = path.format({
+    dir: originalPathParsed.dir,
+    name: mattered.slug ?? key,
+    ext: ".html"
+  });
+
   const languageVersions = [{
     lang: mattered.lang,
     title: mattered.title,
     slug: mattered.slug,
     description: mattered.description,
-    path: relativePath.replace(".md", ".html")
+    path: targetPath
   }];
 
   return { key, date, languageVersions };

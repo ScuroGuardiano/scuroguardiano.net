@@ -1,0 +1,9 @@
+<article>
+  <h3><a [routerLink]="postUrl()">{{ post().title }}</a></h3>
+  <div class="second-line">
+    <span class="date">{{ post().date | translocoDate:{ dateStyle: 'short' } }}</span>
+  </div>
+  <p class="description">
+    {{ post().description }}
+  </p>
+</article>
