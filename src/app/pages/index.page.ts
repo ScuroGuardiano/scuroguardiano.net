@@ -8,7 +8,7 @@ import { TranslocoService } from '@ngneat/transloco';
   standalone: true,
   template: `
     <div class="heading">
-      <h2>Scuro Guardiano</h2>
+      <h2>Scuro Guardiano<br>WORK IN PROGRESS</h2>
       <p>Welcome to my unholy temple~</p>
     </div>
     <div class="content">
