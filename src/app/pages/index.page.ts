@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { BlogService, PostMetadata, SingleLangPostMetadata } from '../services/blog.service';
+import { firstValueFrom } from 'rxjs';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +17,13 @@ import { Component } from '@angular/core';
       </section>
       <section class="posts">
         <h3>Recent blog posts</h3>
+        @if (posts) {
+        <ul>
+          @for (post of posts; track post.key) {
+            <li>{{ post.title }}</li>
+          }
+        </ul>
+        }
       </section>
     </div>
   `,
@@ -50,6 +60,16 @@ import { Component } from '@angular/core';
     `
   ],
 })
-export default class HomeComponent {
+export default class HomeComponent implements OnInit {
+  #blogService = inject(BlogService);
+  #translocoService = inject(TranslocoService);
+  posts?: SingleLangPostMetadata[];
 
+  async ngOnInit(): Promise<void> {
+    // TODO: it won't react to language change, fix it uwu
+    this.posts = await firstValueFrom(this.#blogService.listPostsForLanguage(
+      this.#translocoService.getActiveLang(),
+      'en' // Fallback language will be always en
+    ));
+  }
 }
