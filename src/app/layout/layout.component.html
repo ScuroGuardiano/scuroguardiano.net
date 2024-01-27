@@ -1,16 +1,16 @@
 <header>
-  <ul class="menu" *transloco="let t; read: 'header'">
+  <ul class="menu">
     <li>
-      <a routerLink="/">{{ t('home') }}</a>
+      <a routerLink="/">{{ 'header.home' | transloco }}</a>
     </li>
     <li>
-      <a routerLink="/projects">{{ t('projects') }}</a>
+      <a routerLink="/projects">{{ 'header.projects' | transloco }}</a>
     </li>
     <li>
-      <a routerLink="/blog">{{ t('blog') }}</a>
+      <a routerLink="/blog">{{ 'header.blog' | transloco }}</a>
     </li>
     <li>
-      <a routerLink="/about">{{ t('about') }}</a>
+      <a routerLink="/about">{{ 'header.about' | transloco }}</a>
     </li>
   </ul>
 </header>

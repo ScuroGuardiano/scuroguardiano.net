@@ -61,7 +61,6 @@ import { BlogPostsListComponent } from '../components/blog-posts-list/blog-posts
 export default class HomeComponent implements OnInit {
   #blogService = inject(BlogService);
   #translocoService = inject(TranslocoService);
-  #changeDetectorRef = inject(ChangeDetectorRef);
   posts?: SingleLangPostMetadata[];
 
   async ngOnInit(): Promise<void> {
@@ -70,6 +69,5 @@ export default class HomeComponent implements OnInit {
       this.#translocoService.getActiveLang(),
       'en' // Fallback language will be always en
     ));
-    this.#changeDetectorRef.detectChanges();
   }
 }

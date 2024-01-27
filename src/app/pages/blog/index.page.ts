@@ -12,7 +12,7 @@ import { BlogPostsListComponent } from '../../components/blog-posts-list/blog-po
     BlogPostsListComponent
   ],
   template: `
-    <h2 *transloco="let t; read: 'blog'">{{ t('heading') }}</h2>
+    <!-- <h2 *transloco="let t; read: 'blog'">{{ t('heading') }}</h2> -->
     @if (posts) {
       <app-blog-posts-list [posts]="posts"/>
     }
@@ -27,7 +27,6 @@ export default class HomeComponent implements OnInit {
 
   #blogService = inject(BlogService);
   #translocoService = inject(TranslocoService);
-  #changeDetectorRef = inject(ChangeDetectorRef);
   posts?: SingleLangPostMetadata[];
 
   async ngOnInit(): Promise<void> {
@@ -36,6 +35,5 @@ export default class HomeComponent implements OnInit {
       this.#translocoService.getActiveLang(),
       'en' // Fallback language will be always en
     ));
-    this.#changeDetectorRef.detectChanges();
   }
 }
