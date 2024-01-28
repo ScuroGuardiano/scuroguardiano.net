@@ -17,14 +17,15 @@ import { TranslocoDatePipe } from '@ngneat/transloco-locale';
           <span class="date">{{ post.metadata.date | translocoDate:{ dateStyle: 'long' } }}</span>
         </div>
         <hr>
-        <div [innerHTML]="post.content"></div>
+        <div class="post-content" [innerHTML]="post.content"></div>
       </article>
     }
   `,
   styles: `
     :host {
+      display: block;
       background-color: var(--bg-2);
-      padding: 2rem;
+      padding: 0 1rem;
     }
   `,
 })

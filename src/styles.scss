@@ -34,7 +34,6 @@ html, body {
 a {
   color: var(--accent);
   text-decoration: none;
-  white-space: pre-wrap;
 }
 a:hover {
   text-decoration: underline;
@@ -48,3 +47,6 @@ a:hover {
   max-width: min(100%, 1200px);
 }
 
+.post-content * {
+  word-wrap: break-word;
+}
