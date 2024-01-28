@@ -1,7 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, map, of, tap } from 'rxjs';
+import { Observable, combineLatest, map, of, tap } from 'rxjs';
 
 export interface PostLanguageVersion {
   lang: string;
@@ -35,7 +35,7 @@ export interface SingleLangPostMetadata {
 export class BlogService {
   readonly #http = inject(HttpClient);
   readonly #baseHref = inject(APP_BASE_HREF, { optional: true }) ?? "";
-  readonly #blogBasePath = this.#baseHref + "/__sg/blog";
+  readonly #blogBasePath = this.#baseHref + "/assets/__sg/blog";
   readonly #postListPath = this.#blogBasePath + "/posts.json";
   readonly #blogBaseUrl = "/blog";
 
@@ -93,5 +93,23 @@ export class BlogService {
 
   getUrlForPost(postPath: string) {
     return this.#blogBaseUrl + '/' + postPath.replace('.html', '');
+  }
+
+  getPostMetadata(metadataPath: string): Observable<PostMetadata> {
+    return this.#http.get<PostMetadataGen<string>>(metadataPath)
+      .pipe(
+        map(m => ({ ...m, date: new Date(m.date) }))
+      );
+  }
+
+  getPostWithContent(path: string): Observable<{ metadata: PostMetadata, content: string }> {
+    const basePath = this.#blogBasePath + "/" + path;
+    const contentPath = basePath + ".html";
+    const metadataPath = basePath + ".json";
+
+    return combineLatest({
+      content: this.#http.get(contentPath, { responseType: "text" }),
+      metadata: this.getPostMetadata(metadataPath)
+    });
   }
 }

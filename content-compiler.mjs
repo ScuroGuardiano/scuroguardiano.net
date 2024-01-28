@@ -17,6 +17,9 @@ import * as fs from 'node:fs/promises';
 import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
 import { marked } from 'marked';
+// I don't know which version of Node cloudflare uses, so for compatibility I will use
+// this core js import
+import 'core-js/actual/array/to-sorted.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -107,7 +110,12 @@ adiagoPromises = [];
 for (const value of blogs.values()) {
   value.languageVersions.forEach(langVersion => {
     const path = makeTargetPath(langVersion.path, langVersion.slug);
-    adiagoPromises.push(fs.writeFile(path.replace('.html', '.json'), JSON.stringify(value)));
+
+    // I will make current language first, so when I am using this on frontend I can do
+    // post.languageVersions[0].title to get title and so on.
+    const valueWithCurrentLanguageFirst = { ...value, languageVersions: value.languageVersions.toSorted(lv => lv == langVersion ? -1 : 1) };
+
+    adiagoPromises.push(fs.writeFile(path.replace('.html', '.json'), JSON.stringify(valueWithCurrentLanguageFirst)));
   });
 }
 

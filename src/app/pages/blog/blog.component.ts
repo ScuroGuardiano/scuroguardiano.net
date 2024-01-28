@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostBinding, OnInit, inject } from '@angular/core';
+import { Component, HostBinding, OnInit, inject } from '@angular/core';
 import { BlogService, SingleLangPostMetadata } from '../../services/blog.service';
 import { firstValueFrom } from 'rxjs';
 import { TranslocoDirective, TranslocoService } from '@ngneat/transloco';
@@ -21,7 +21,7 @@ import { BlogPostsListComponent } from '../../components/blog-posts-list/blog-po
 
   ],
 })
-export default class HomeComponent implements OnInit {
+export default class BlogComponent implements OnInit {
   @HostBinding("class.reading-width")
   readingWidthClas = true;
 

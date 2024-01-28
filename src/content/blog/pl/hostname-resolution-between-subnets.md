@@ -5,7 +5,6 @@ lang: pl
 date: 2022-05-03
 description: Jak forwardować mDNS-a?
 ---
-# Hostname resolution between subnets
 Or mDNS reflection with Avahi
 
 ## The problem

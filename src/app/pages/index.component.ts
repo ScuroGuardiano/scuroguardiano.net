@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { BlogService, PostMetadata, SingleLangPostMetadata } from '../services/blog.service';
+import { Component, OnInit, inject } from '@angular/core';
+import { BlogService, SingleLangPostMetadata } from '../services/blog.service';
 import { firstValueFrom } from 'rxjs';
 import { TranslocoService } from '@ngneat/transloco';
 import { BlogPostsListComponent } from '../components/blog-posts-list/blog-posts-list.component';
@@ -37,7 +37,7 @@ import { BlogPostsListComponent } from '../components/blog-posts-list/blog-posts
         text-align: center;
       }
       .heading h2 {
-        font-size: 300%;
+        font-size: 250%;
         color: var(--fg-4);
         margin-bottom: 0;
       }
@@ -48,12 +48,22 @@ import { BlogPostsListComponent } from '../components/blog-posts-list/blog-posts
       .content {
         gap: 2rem;
         display: flex;
+        flex-direction: column;
       }
       .content > * {
         flex: 1;
       }
-      .content > section > h3 {
-        text-align: center;
+
+      @media (min-width: 800px) {
+        .content {
+          flex-direction: row;
+        }
+        .content > section > h3 {
+          text-align: center;
+        }
+        .heading h2 {
+          font-size: 300%;
+        }
       }
     `
   ],

@@ -10,7 +10,7 @@ import { TranslocoPipe } from '@ngneat/transloco';
     TranslocoPipe
   ],
   templateUrl: './layout.component.html',
-  styleUrl: './layout.component.css'
+  styleUrl: './layout.component.scss'
 })
 export class LayoutComponent {
 

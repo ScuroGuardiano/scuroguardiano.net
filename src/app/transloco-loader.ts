@@ -9,6 +9,6 @@ export class TranslocoHttpLoader implements TranslocoLoader {
   private baseHref = inject(APP_BASE_HREF, { optional: true }) ?? "";
 
   getTranslation(lang: string) {
-    return this.http.get<Translation>(`${this.baseHref}/i18n/${lang}.json`);
+    return this.http.get<Translation>(`${this.baseHref}/assets/i18n/${lang}.json`);
   }
 }

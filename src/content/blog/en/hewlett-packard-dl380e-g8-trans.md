@@ -5,7 +5,6 @@ lang: en
 date: 2024-01-26
 description: An idea came to my mind to transform HP Proliant DL380e G8 to work with normal mATX motherboard. This wasn't good idea.
 ---
-# Transforming HP Proliant DL380e G8 to work with ATX MOBO
 ## Some server spec that matters for me:
 * 14 LFF SAS/SATA Drive Bays, 12 at the front and 2 at the rear
 * P420 Smart Array Raid Controller

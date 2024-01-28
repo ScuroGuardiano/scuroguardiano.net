@@ -1,18 +1,58 @@
-import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
+import { Component, HostListener, PLATFORM_ID, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { LayoutComponent } from "./layout/layout.component";
 import { ParticlesComponent } from './components/particles/particles.component';
+import { filter, map } from 'rxjs';
+import { AsyncPipe, isPlatformBrowser } from '@angular/common';
 
 @Component({
     selector: 'app-root',
     standalone: true,
     template: `
-    <app-particles/>
+
+    @if (!(particlesDisabled$ | async)) {
+      <app-particles [particles]="getParticlesCount()"/>
+    }
     <app-layout>
       <router-outlet></router-outlet>
     </app-layout>
   `,
     styles: `app-particles { z-index: -1 }`,
-    imports: [RouterOutlet, LayoutComponent, ParticlesComponent]
+    imports: [RouterOutlet, LayoutComponent, ParticlesComponent, AsyncPipe]
 })
-export class AppComponent {}
+export class AppComponent {
+  #router = inject(Router);
+  platformId = inject(PLATFORM_ID);
+
+  particlesDisabled$ = this.#router.events.pipe(
+    filter(event => event instanceof NavigationEnd),
+    map(event => {
+      return this.#shouldParticlesBeDisabledToNotFuckinAnnoyReaders((event as NavigationEnd).url)
+    })
+  );
+
+  #shouldParticlesBeDisabledToNotFuckinAnnoyReaders(url: string) {
+    return this.#disableParticlesConditions.some(cond => cond(url));
+  }
+
+  #disableParticlesConditions: ((url: string) => boolean)[] = [
+    url => /^\/blog\/.+/gm.test(url),
+    url => /^\/projects\/.+/gm.test(url)
+  ];
+
+  getParticlesCount() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return 0;
+    }
+    const screenArea = window.screen.width * window.screen.height;
+    // if (screenArea < 500_000) {
+    //   // On small screens let's just disable particles.
+    //   return 0;
+    // }
+
+    return Math.round(screenArea / 50000);
+  }
+
+  @HostListener("window:resize")
+  windowResize() {}
+}

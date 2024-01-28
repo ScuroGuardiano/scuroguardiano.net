@@ -39,6 +39,11 @@ a:hover {
   text-decoration: underline;
 }
 
-.reading-width {
-  width: min(100%, 1200px);
+.layout-main > * {
+  width: 100%;
 }
+
+.reading-width {
+  max-width: min(100%, 1200px);
+}
+
