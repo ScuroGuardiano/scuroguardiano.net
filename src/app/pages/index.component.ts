@@ -3,14 +3,14 @@ import { BlogService, SingleLangPostMetadata } from '../services/blog.service';
 import { firstValueFrom } from 'rxjs';
 import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
 import { BlogPostsListComponent } from '../components/blog-posts-list/blog-posts-list.component';
+import { FeaturedProjectsComponent } from "../components/featured-projects/featured-projects.component";
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [BlogPostsListComponent, TranslocoPipe],
-  template: `
+    selector: 'app-home',
+    standalone: true,
+    template: `
     <div class="heading">
-      <h2>Scuro Guardiano</h2>
+      <h1>Scuro Guardiano</h1>
       <p>{{ "home.about" | transloco }}</p>
       <p>
         <a href="https://github.com/ScuroGuardiano" class="highlight" target="_blank">Github</a>
@@ -20,18 +20,19 @@ import { BlogPostsListComponent } from '../components/blog-posts-list/blog-posts
     </div>
     <div class="content reading-width">
       <section class="projects">
-        <h3>{{ "home.featuredProjects" | transloco }}</h3>
+        <h2>{{ "home.featuredProjects" | transloco }}</h2>
+        <app-featured-projects />
       </section>
       <section class="posts">
-        <h3>{{ "home.recentPosts" | transloco }}</h3>
+        <h2>{{ "home.recentPosts" | transloco }}</h2>
         @if (posts) {
           <app-blog-posts-list [posts]="posts" [show]="4" />
         }
       </section>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: flex;
         align-items: center;
@@ -41,7 +42,7 @@ import { BlogPostsListComponent } from '../components/blog-posts-list/blog-posts
         max-width: 800px;
         text-align: center;
       }
-      .heading h2 {
+      .heading h1 {
         font-size: 250%;
         color: var(--fg-4);
       }
@@ -55,7 +56,7 @@ import { BlogPostsListComponent } from '../components/blog-posts-list/blog-posts
       }
 
       .content {
-        gap: 2rem;
+        gap: 3rem;
         display: flex;
         flex-direction: column;
         margin-top: 2rem;
@@ -68,15 +69,16 @@ import { BlogPostsListComponent } from '../components/blog-posts-list/blog-posts
         .content {
           flex-direction: row;
         }
-        .content > section > h3 {
+        .content > section > h2 {
           text-align: center;
         }
-        .heading h2 {
+        .heading h1 {
           font-size: 300%;
         }
       }
     `
-  ],
+    ],
+    imports: [BlogPostsListComponent, TranslocoPipe, FeaturedProjectsComponent]
 })
 export default class HomeComponent implements OnInit {
   #blogService = inject(BlogService);

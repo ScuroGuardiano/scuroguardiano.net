@@ -5,94 +5,96 @@ lang: pl
 date: 2022-05-03
 description: Jak forwardować mDNS-a?
 ---
-Or mDNS reflection with Avahi
+Lub reflekcja mDNS z użyciem Avahi
 
-## The problem
-Let's assume we have 2 networks
+## Problem
+Załóżmy, że mamy dwie sieci:
 - 192.168.0.0/24
 - 192.168.1.0/24
 
-And let's assume we have some hosts:
+Oraz kilka hostów:
 - wordpress 192.168.0.2
 - nginx 192.168.0.3
 - gateway 192.168.0.1 192.168.1.1
 - gaming_pc 192.168.1.34
 
-We try to ping *wordpress* from *gaming_pc*
+Próbujemy pingować hosta *wordpress* z *gaming_pc*
 ```sh
 [scuroguardiano@gaming_pc]$ ping wordpress
 ping: wordpress: Name or service not known
 ```
 
-We can't ping it, because it's not in the same network. But we  can make it work by using **Avahi** and **mdns**.
+Dostajemy błąd, ponieważ te hosty nie są w tej samej sieci. Można to naprawić używając **Avahi** oraz **mdns**.
 
-# The Solution
+## Rozwiązanie
 
-> Note: I did it on Arch Linux with resolution made by systemd-resolved. You must find how to install Avahi on your distribution. And if you have different DNS than systemd-resoved you must search how to enable mdns on it aswell.
+> Notka: Zrobiłem to na Arch Linuxie używając systemd-resolved do rozpoznawania po nazwach. Musisz poszukać jak zainstalować Avahi na swojej dystrybucji. Jeżeli używasz innego klienta DNS niż systemd-resolved to musisz poszukać ja włączyć na nim mDNS.
 
-## Install and configure Avahi on `gateway`
-We have to install avahi on machine that has access to both subnets. In our case it is gateway.
+## Instalacja i konfiguracja Avahi na hoście `gateway`
+Instalujemy Avahi na hoście, który ma dostęp do obu sieci, w moim przypadku jest to `gateway`
 
 ```sh
-# On gateway
+# Na hoście gateway
 sudo pacman -S avahi
 sudo nano /etc/avahi/avahi-daemon.conf
 ```
-Find section in avahi-daemon.conf:
+Znajdź tę sekcję w pliku avahi-daemon.conf:
 ```conf
 [reflector]
 enable-reflector=no
 #reflect-ipv=no
 #reflect-filters=_airplay._tcp.local,_raop._tcp.local
 ```
-and change `enable-refletor` to yes
+i zmień `enable-reflector` na `yes`
 ```conf
-enable-refletor=yes
+enable-reflector=yes
 ```
-Save the file, quit nano and start avahi-daemon.service:
+Zapisz plik, wyjdź z nano i uruchom serwis avahi-daemon.service:
 ```sh
-# On gateway
+# Na hoście gateway
 sudo systemctl enable --now avahi-daemon
 ```
 
-## Enable mdns on hosts
+## Włączenie mDNS na hostach
 It won't work yet. You must enable mdns on hosts. In our example we will log into our *wordpress* and enable mdns. You must know which interface you want to change. Use `ip addr` to list them:
+
+Trzeba jeszcze włączyć mDNS na hostach, żeby to zadziałało. W moim przypadku muszę włączyć mDNS na hoście *wordpress*. Aby to zrobić najpierw muszę wiedzieć na którym interfejsie chcę to włączyć. `ip addr` da nam listę interfejsów:
 ```sh
-# on wordpress
+# Na wordpress
 ip addr
 ```
-And enable mdns for correct one:
+I włączamy mDNS na poprawnym interfejsie:
 ```sh
-# on wordpress
+# Na wordpress
 sudo systemd-resolve --set-mdns=yes --interface <interface>
 ```
-For example:
+Na przykład:
 ```sh
-# on wordpress
+# Na wordpress
 sudo systemd-resolve --set-mdns=yes --interface ens18
 ```
-You can verify changes with
+Zby zweryfikować zmiany należy użyć
 ```sh
 resolvectl status
 ```
 
-## Without systemd-resolved
-If you don't have systemd-resolved just install and enable Avahi on hosts:
+## Bez systemd-resolved
+Jeżeli nie używasz systemd-resolved to możesz po prostu zainstalować Avahi na hostach i użyć avahi:
 ```sh
-# on wordpress
+# Na wordpress
 sudo pacman -S avahi
 sudo systemctl enable --now avahi
 ```
 
-## It's working!
-Now we can ping it from gaming_pc on Linux with
+## I działa!
+Teraz mogę zpingować wordpressa po jego nazwie z hosta `gaming_pc`:
 ```sh
-# on gaming_pc
+# Na gaming_pc
 ping wordpress.local
 ```
-or from gaming_pc on Windows
+Jest to kompatybilne także z Windowsem:
 ```sh
-# on gaming_pc
+# Na gaming_pc, System operacyjny: Windows
 ping wordpress
 ```
 

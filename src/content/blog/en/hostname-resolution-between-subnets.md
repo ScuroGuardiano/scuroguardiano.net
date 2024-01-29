@@ -8,7 +8,7 @@ description: How to forward mDNS?
 Or mDNS reflection with Avahi
 
 ## The problem
-Let's assume we have 2 networks
+Let's assume we have 2 networks:
 - 192.168.0.0/24
 - 192.168.1.0/24
 
@@ -26,7 +26,7 @@ ping: wordpress: Name or service not known
 
 We can't ping it, because it's not in the same network. But we  can make it work by using **Avahi** and **mdns**.
 
-# The Solution
+## The Solution
 
 > Note: I did it on Arch Linux with resolution made by systemd-resolved. You must find how to install Avahi on your distribution. And if you have different DNS than systemd-resoved you must search how to enable mdns on it aswell.
 
@@ -45,9 +45,9 @@ enable-reflector=no
 #reflect-ipv=no
 #reflect-filters=_airplay._tcp.local,_raop._tcp.local
 ```
-and change `enable-refletor` to yes
+and change `enable-reflector` to `yes`
 ```conf
-enable-refletor=yes
+enable-reflector=yes
 ```
 Save the file, quit nano and start avahi-daemon.service:
 ```sh
@@ -92,7 +92,7 @@ ping wordpress.local
 ```
 or from gaming_pc on Windows
 ```sh
-# on gaming_pc
+# on gaming_pc, OS: Windows
 ping wordpress
 ```
 

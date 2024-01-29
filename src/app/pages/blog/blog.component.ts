@@ -1,18 +1,18 @@
 import { Component, HostBinding, OnInit, inject } from '@angular/core';
 import { BlogService, SingleLangPostMetadata } from '../../services/blog.service';
 import { firstValueFrom } from 'rxjs';
-import { TranslocoDirective, TranslocoService } from '@ngneat/transloco';
+import { TranslocoDirective, TranslocoPipe, TranslocoService } from '@ngneat/transloco';
 import { BlogPostsListComponent } from '../../components/blog-posts-list/blog-posts-list.component';
 
 @Component({
   selector: 'app-blog',
   standalone: true,
   imports: [
-    TranslocoDirective,
+    TranslocoPipe,
     BlogPostsListComponent
   ],
   template: `
-    <!-- <h2 *transloco="let t; read: 'blog'">{{ t('heading') }}</h2> -->
+    <h1>{{ "blog.heading" | transloco }}</h1>
     @if (posts) {
       <app-blog-posts-list [posts]="posts"/>
     }

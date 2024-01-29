@@ -12,5 +12,9 @@
     "recentPosts": "Najnowsze posty na blogu",
     "featuredProjects": "Wyróżnione projekty",
     "about": "Ukryty w swojej piwnicy programista .NET oraz Angulara, gracz gier surwiwalowych i profesjonalny palacz płyt głównych. Od czasu do czasu także entuzjasta szlajania się nocami po okolicy, kiedy bezpiecznie można wyjść z jaskini."
+  },
+  "projects": {
+    "smartArrayReader": "Prosty program do odczytywania danych i metadanych z logicznych dysków utworzonych przy użyciu kontrolerów HP Smart Array. Wspiera RAID 0, 1, 5, 6, 10, 50 i 60, a także wiele logicznych dysków na jednej macierzy.",
+    "nextbooru": "Prosty w hostowaniu i szybki taggable image board, czyli platforma do hostowania obrazków wyszukiwanych za pomocą tagów. Prace w trakcie."
   }
 }

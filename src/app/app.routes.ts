@@ -32,6 +32,10 @@ export const routes: Routes = [
     loadComponent: () => import("./pages/blog/blog.component")
   },
   {
+    path: "projects",
+    loadComponent: () => import("./pages/projects/projects.component")
+  },
+  {
     matcher: blogPostMatcher,
     loadComponent: () => import("./pages/blog/post.component")
   }
