@@ -1,24 +1,29 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { BlogService, SingleLangPostMetadata } from '../services/blog.service';
 import { firstValueFrom } from 'rxjs';
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
 import { BlogPostsListComponent } from '../components/blog-posts-list/blog-posts-list.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [BlogPostsListComponent],
+  imports: [BlogPostsListComponent, TranslocoPipe],
   template: `
     <div class="heading">
-      <h2>Scuro Guardiano<!--<br>WORK IN PROGRESS--></h2>
-      <p>Welcome to my unholy temple~</p>
+      <h2>Scuro Guardiano</h2>
+      <p>{{ "home.about" | transloco }}</p>
+      <p>
+        <a href="https://github.com/ScuroGuardiano" class="highlight" target="_blank">Github</a>
+        {{' '}}&middot;{{' '}}
+        Discord: <span class="highlight">scuroguardiano</span>
+      <p>
     </div>
     <div class="content reading-width">
       <section class="projects">
-        <h3>Featured projects</h3>
+        <h3>{{ "home.featuredProjects" | transloco }}</h3>
       </section>
       <section class="posts">
-        <h3>Recent blog posts</h3>
+        <h3>{{ "home.recentPosts" | transloco }}</h3>
         @if (posts) {
           <app-blog-posts-list [posts]="posts" [show]="4" />
         }
@@ -33,22 +38,27 @@ import { BlogPostsListComponent } from '../components/blog-posts-list/blog-posts
         flex-direction: column;
       }
       .heading {
-        max-width: 600px;
+        max-width: 800px;
         text-align: center;
       }
       .heading h2 {
         font-size: 250%;
         color: var(--fg-4);
-        margin-bottom: 0;
       }
       .heading p {
         color: var(--fg-3);
+        font-size: 1.1rem;
+      }
+
+      .heading .highlight {
+        font-weight: bold;
       }
 
       .content {
         gap: 2rem;
         display: flex;
         flex-direction: column;
+        margin-top: 2rem;
       }
       .content > * {
         flex: 1;

@@ -7,5 +7,10 @@
   },
   "blog": {
     "heading": "Posty na blogu"
+  },
+  "home": {
+    "recentPosts": "Najnowsze posty na blogu",
+    "featuredProjects": "Wyróżnione projekty",
+    "about": "Ukryty w swojej piwnicy programista .NET oraz Angulara, gracz gier surwiwalowych i profesjonalny palacz płyt głównych. Od czasu do czasu także entuzjasta szlajania się nocami po okolicy, kiedy bezpiecznie można wyjść z jaskini."
   }
 }

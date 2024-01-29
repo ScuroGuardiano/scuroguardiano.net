@@ -7,5 +7,10 @@
   },
   "blog": {
     "heading": "Blog posts"
+  },
+  "home": {
+    "recentPosts": "Recent blog posts",
+    "featuredProjects": "Featured projects",
+    "about": "Hidden in his basement .NET and Angular programmer, suvival games player and professional motherboards burner. From time to time also enjoyer of wandering around the neighborhood at night, when it's safe to get out of his cave."
   }
 }

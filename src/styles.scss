@@ -15,9 +15,9 @@ html, body {
   --bg-3: #242424;
   --accent: #f9d2ff;
 
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
+  font-family: "Noto serif", serif;
+  font-size: 18px;
+  line-height: 26px;
   font-weight: 400;
 
   color: var(--fg);
@@ -30,6 +30,13 @@ html, body {
   -webkit-text-size-adjust: 100%;
 }
 
+.blog-post {
+  color: var(--fg-2);
+}
+
+h1, h2, h3, h4, h5, h6, .menu a {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+}
 
 a {
   color: var(--accent);

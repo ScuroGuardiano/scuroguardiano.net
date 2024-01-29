@@ -11,7 +11,7 @@ import { TranslocoDatePipe } from '@ngneat/transloco-locale';
   imports: [AsyncPipe, TranslocoDatePipe],
   template: `
     @if (post$ | async; as post) {
-      <article>
+      <article class="blog-post">
         <h1>{{ post.metadata.languageVersions[0].title }}</h1>
         <div class="second-line">
           <span class="date">{{ post.metadata.date | translocoDate:{ dateStyle: 'long' } }}</span>
