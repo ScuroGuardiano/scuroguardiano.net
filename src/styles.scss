@@ -7,18 +7,26 @@ html, body {
 
 :root {
   --fg: rgba(255, 255, 255, 0.87);
-  --fg-2: rgba(255, 255, 255, 0.7);
+  --fg-2: rgba(255, 255, 255, 0.75);
   --fg-3: rgba(255, 255, 255, 0.65);
-  --fg-4: rgba(255, 255, 255, 0.4);
+  --fg-4: rgba(255, 255, 255, 0.6);
+  --fg-5: rgba(255, 255, 255, 0.4);
   --bg: #111;
   --bg-2: #151515;
   --bg-3: #242424;
+  --bg-4: #303030;
   --accent: #f9d2ff;
 
   font-family: "Noto serif", serif;
-  font-size: 18px;
-  line-height: 26px;
+  font-size: 16px;
+  line-height: 24px;
   font-weight: 400;
+
+  @media (min-width: 800px) {
+    // On larger screens larger font size makes it better
+    font-size: 18px;
+    line-height: 26px;
+  }
 
   color: var(--fg);
   background-color: var(--bg);
@@ -56,4 +64,29 @@ a:hover {
 
 .post-content * {
   word-wrap: break-word;
+}
+.post-content {
+  code, pre {
+    background-color: var(--bg-4);
+    font-family: Consolas, 'Courier New', Courier, monospace;
+  }
+
+  :not(pre) code {
+    padding: .1em .2em;
+    border-radius: 10px;
+  }
+  pre {
+    padding: .4em .6em;
+  }
+
+  blockquote {
+    border-left: solid 4px var(--fg-5);
+    color: var(--fg-4);
+    margin-left: 0;
+    padding-left: 2em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 1.5em;
+  }
 }

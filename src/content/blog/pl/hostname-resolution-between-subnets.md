@@ -56,21 +56,19 @@ sudo systemctl enable --now avahi-daemon
 ```
 
 ## Włączenie mDNS na hostach
-It won't work yet. You must enable mdns on hosts. In our example we will log into our *wordpress* and enable mdns. You must know which interface you want to change. Use `ip addr` to list them:
-
 Trzeba jeszcze włączyć mDNS na hostach, żeby to zadziałało. W moim przypadku muszę włączyć mDNS na hoście *wordpress*. Aby to zrobić najpierw muszę wiedzieć na którym interfejsie chcę to włączyć. `ip addr` da nam listę interfejsów:
 ```sh
-# Na wordpress
+# wordpress
 ip addr
 ```
 I włączamy mDNS na poprawnym interfejsie:
 ```sh
-# Na wordpress
+# wordpress
 sudo systemd-resolve --set-mdns=yes --interface <interface>
 ```
 Na przykład:
 ```sh
-# Na wordpress
+# wordpress
 sudo systemd-resolve --set-mdns=yes --interface ens18
 ```
 Zby zweryfikować zmiany należy użyć
@@ -81,7 +79,7 @@ resolvectl status
 ## Bez systemd-resolved
 Jeżeli nie używasz systemd-resolved to możesz po prostu zainstalować Avahi na hostach i użyć avahi:
 ```sh
-# Na wordpress
+# wordpress
 sudo pacman -S avahi
 sudo systemctl enable --now avahi
 ```
@@ -89,12 +87,12 @@ sudo systemctl enable --now avahi
 ## I działa!
 Teraz mogę zpingować wordpressa po jego nazwie z hosta `gaming_pc`:
 ```sh
-# Na gaming_pc
+# gaming_pc
 ping wordpress.local
 ```
 Jest to kompatybilne także z Windowsem:
 ```sh
-# Na gaming_pc, System operacyjny: Windows
+# gaming_pc, System operacyjny: Windows
 ping wordpress
 ```
 

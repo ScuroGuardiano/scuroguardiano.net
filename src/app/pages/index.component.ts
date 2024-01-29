@@ -18,6 +18,7 @@ import { FeaturedProjectsComponent } from "../components/featured-projects/featu
         Discord: <span class="highlight">scuroguardiano</span>
       <p>
     </div>
+    <hr/>
     <div class="content reading-width">
       <section class="projects">
         <h2>{{ "home.featuredProjects" | transloco }}</h2>
@@ -37,6 +38,9 @@ import { FeaturedProjectsComponent } from "../components/featured-projects/featu
         display: flex;
         align-items: center;
         flex-direction: column;
+      }
+      hr {
+        width: 100%;
       }
       .heading {
         max-width: 800px;
