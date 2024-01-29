@@ -1,9 +1,10 @@
-import { Component, HostListener, PLATFORM_ID, inject } from '@angular/core';
+import { Component, HostListener, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { LayoutComponent } from "./layout/layout.component";
 import { ParticlesComponent } from './components/particles/particles.component';
 import { filter, map } from 'rxjs';
-import { AsyncPipe, isPlatformBrowser } from '@angular/common';
+import { AsyncPipe, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
     selector: 'app-root',
@@ -20,9 +21,17 @@ import { AsyncPipe, isPlatformBrowser } from '@angular/common';
     styles: `app-particles { z-index: -1 }`,
     imports: [RouterOutlet, LayoutComponent, ParticlesComponent, AsyncPipe]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   #router = inject(Router);
-  platformId = inject(PLATFORM_ID);
+  #platformId = inject(PLATFORM_ID);
+  #document = inject(DOCUMENT);
+  #transoloco = inject(TranslocoService);
+
+  ngOnInit(): void {
+    this.#transoloco.langChanges$.subscribe(l => {
+      this.#document.documentElement.lang = l;
+    })
+  }
 
   particlesDisabled$ = this.#router.events.pipe(
     filter(event => event instanceof NavigationEnd),
@@ -41,7 +50,7 @@ export class AppComponent {
   ];
 
   getParticlesCount() {
-    if (!isPlatformBrowser(this.platformId)) {
+    if (!isPlatformBrowser(this.#platformId)) {
       return 0;
     }
     const screenArea = window.screen.width * window.screen.height;

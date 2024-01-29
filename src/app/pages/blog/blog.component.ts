@@ -1,8 +1,9 @@
-import { Component, HostBinding, OnInit, inject } from '@angular/core';
+import { Component, HostBinding, OnDestroy, OnInit, inject } from '@angular/core';
 import { BlogService, SingleLangPostMetadata } from '../../services/blog.service';
-import { firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { TranslocoDirective, TranslocoPipe, TranslocoService } from '@ngneat/transloco';
 import { BlogPostsListComponent } from '../../components/blog-posts-list/blog-posts-list.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-blog',
@@ -21,19 +22,37 @@ import { BlogPostsListComponent } from '../../components/blog-posts-list/blog-po
 
   ],
 })
-export default class BlogComponent implements OnInit {
+export default class BlogComponent implements OnInit, OnDestroy {
   @HostBinding("class.reading-width")
   readingWidthClas = true;
 
   #blogService = inject(BlogService);
   #translocoService = inject(TranslocoService);
+  #title = inject(Title);
   posts?: SingleLangPostMetadata[];
+  subs: Subscription[] = [];
 
   async ngOnInit(): Promise<void> {
-    // TODO: it won't react to language change, fix it uwu
+    this.subs.push(this.#translocoService.langChanges$.subscribe(() => {
+      this.applyTranslations();
+    }));
+    this.subs.push(this.#translocoService.selectTranslate("header.blog").subscribe(t => {
+      this.setTitle(t);
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
+  }
+
+  async applyTranslations() {
     this.posts = await firstValueFrom(this.#blogService.listPostsForLanguage(
       this.#translocoService.getActiveLang(),
       'en' // Fallback language will be always en
     ));
+  }
+
+  setTitle(blog: string) {
+    this.#title.setTitle(`${blog} · Scuro Guardiano`)
   }
 }

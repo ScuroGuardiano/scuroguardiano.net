@@ -1,10 +1,7 @@
-import { Component, HostBinding, OnInit, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { AsyncPipe } from '@angular/common';
-import { BlogService } from 'src/app/services/blog.service';
-import { map, switchMap } from 'rxjs';
-import { TranslocoDatePipe } from '@ngneat/transloco-locale';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { Component, HostBinding, OnDestroy, OnInit, inject } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-projects',
@@ -42,7 +39,25 @@ import { TranslocoPipe } from '@ngneat/transloco';
     }
   `,
 })
-export default class ProjectsComponent {
+export default class ProjectsComponent implements OnInit, OnDestroy {
   @HostBinding("class.reading-width")
   readingWidthClass = true;
+
+  #title = inject(Title);
+  #translocoService = inject(TranslocoService);
+  subs: Subscription[] = [];
+
+  ngOnInit(): void {
+    this.subs.push(this.#translocoService.selectTranslate("header.projects").subscribe(t => {
+      this.setTitle(t);
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
+  }
+
+  setTitle(projects: string) {
+    this.#title.setTitle(`${projects} · Scuro Guardiano`);
+  }
 }

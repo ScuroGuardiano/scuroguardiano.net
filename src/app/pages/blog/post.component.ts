@@ -4,6 +4,7 @@ import { AsyncPipe } from '@angular/common';
 import { BlogService } from 'src/app/services/blog.service';
 import { map, switchMap, tap } from 'rxjs';
 import { TranslocoDatePipe } from '@ngneat/transloco-locale';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-blog-post',
@@ -34,10 +35,12 @@ export default class PostComponent {
   readingWidthClass = true;
 
   #blogService = inject(BlogService);
-
+  #title = inject(Title);
   #route = inject(ActivatedRoute);
+
   path$ = this.#route.paramMap.pipe(map(p => p.get('path')!));
   post$ = this.path$.pipe(
-    switchMap(path => this.#blogService.getPostWithContent(path))
+    switchMap(path => this.#blogService.getPostWithContent(path)),
+    tap(p => this.#title.setTitle(`${p.metadata.languageVersions[0].title} · Scuro Guardiano`))
   );
 }
