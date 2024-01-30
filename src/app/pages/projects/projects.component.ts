@@ -2,6 +2,7 @@ import { Component, HostBinding, OnDestroy, OnInit, inject } from '@angular/core
 import { Title } from '@angular/platform-browser';
 import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
 import { Subscription } from 'rxjs';
+import { SeoService } from 'src/app/services/seo.service';
 
 @Component({
   selector: 'app-projects',
@@ -45,12 +46,14 @@ export default class ProjectsComponent implements OnInit, OnDestroy {
 
   #title = inject(Title);
   #translocoService = inject(TranslocoService);
+  #seoService = inject(SeoService);
   subs: Subscription[] = [];
 
   ngOnInit(): void {
     this.subs.push(this.#translocoService.selectTranslate("header.projects").subscribe(t => {
       this.setTitle(t);
     }));
+    this.#seoService.defaultSEO();
   }
 
   ngOnDestroy(): void {

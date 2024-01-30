@@ -4,6 +4,7 @@ import { Subscription, firstValueFrom } from 'rxjs';
 import { TranslocoDirective, TranslocoPipe, TranslocoService } from '@ngneat/transloco';
 import { BlogPostsListComponent } from '../../components/blog-posts-list/blog-posts-list.component';
 import { Title } from '@angular/platform-browser';
+import { SeoService } from 'src/app/services/seo.service';
 
 @Component({
   selector: 'app-blog',
@@ -29,6 +30,8 @@ export default class BlogComponent implements OnInit, OnDestroy {
   #blogService = inject(BlogService);
   #translocoService = inject(TranslocoService);
   #title = inject(Title);
+  #seoService = inject(SeoService);
+
   posts?: SingleLangPostMetadata[];
   subs: Subscription[] = [];
 
@@ -36,9 +39,12 @@ export default class BlogComponent implements OnInit, OnDestroy {
     this.subs.push(this.#translocoService.langChanges$.subscribe(() => {
       this.applyTranslations();
     }));
+
     this.subs.push(this.#translocoService.selectTranslate("header.blog").subscribe(t => {
       this.setTitle(t);
     }));
+
+    this.#seoService.defaultSEO();
   }
 
   ngOnDestroy(): void {

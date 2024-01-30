@@ -1,4 +1,7 @@
 {
+  "seo": {
+    "description": "Ukryty w swojej piwnicy programista .NET oraz Angulara."
+  },
   "header": {
     "home": "Strona główna",
     "projects": "Projekty",

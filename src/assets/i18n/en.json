@@ -1,4 +1,7 @@
 {
+  "seo": {
+    "description": "Hidden in his basement .NET and Angular programmer."
+  },
   "header": {
     "home": "Home",
     "projects": "Projects",

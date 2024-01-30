@@ -5,6 +5,7 @@ import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
 import { BlogPostsListComponent } from '../components/blog-posts-list/blog-posts-list.component';
 import { FeaturedProjectsComponent } from "../components/featured-projects/featured-projects.component";
 import { Title } from '@angular/platform-browser';
+import { SeoService } from '../services/seo.service';
 
 @Component({
     selector: 'app-home',
@@ -89,6 +90,7 @@ export default class HomeComponent implements OnInit, OnDestroy {
   #blogService = inject(BlogService);
   #translocoService = inject(TranslocoService);
   #title = inject(Title);
+  #seoService = inject(SeoService);
   posts?: SingleLangPostMetadata[];
   subs: Subscription[] = [];
 
@@ -97,6 +99,7 @@ export default class HomeComponent implements OnInit, OnDestroy {
       this.applyTranslations();
     }));
     this.#title.setTitle("Scuro Guardiano");
+    this.#seoService.defaultSEO();
   }
 
   ngOnDestroy(): void {
