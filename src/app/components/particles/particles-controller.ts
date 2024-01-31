@@ -221,6 +221,12 @@ export class ParticlesController {
      * @param dt delta time in seconds
      */
 
+    if (dt > 1) {
+      // Browser pause the animation on alt tab, so to avoid ugly all particles despawn
+      // I will set time to 1/60 of a second so animation would look smooth uwu
+      dt = 1 / 60;
+    }
+
     this.#particles.forEach(p => p.update(dt));
   }
 }
