@@ -1,0 +1,2 @@
+/blog/pl/rozpoznawanie-po-nazwie-hosta-pomiedzy-podsieciami
+/blog/en/hostname-resolution-between-subnets

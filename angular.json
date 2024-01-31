@@ -35,7 +35,10 @@
             ],
             "scripts": [],
             "server": "src/main.server.ts",
-            "prerender": true,
+            "prerender": {
+              "routesFile": "routes.txt",
+              "discoverRoutes": true
+            },
             "ssr": {
               "entry": "server.ts"
             }

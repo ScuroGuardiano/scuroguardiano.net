@@ -26,6 +26,7 @@ const __dirname = path.dirname(__filename);
 
 const blogDir = path.join(__dirname, 'src', 'content', 'blog');
 const outputDir = path.join(__dirname, 'src', 'assets', '__sg', 'blog');
+const ngPostBaseUrl = "/blog";
 
 const blogs = new Map();
 
@@ -123,7 +124,16 @@ for (const value of blogs.values()) {
 // But wait! You want to use this JSON as a source for your blog list?! It will get huge to load
 // Well it will be somewhere about 0.7-1KB per post without compression,
 // not a big issue unless I will have like 420 posts.
+// and it will be SSG-ed anyways.
 const postsSorted = Array.from(blogs.values()).sort((a, b) => (b.date?.getTime() ?? 0) - (a.date?.getTime() ?? 0));
 adiagoPromises.push(fs.writeFile(path.join(outputDir, 'posts.json'), JSON.stringify(postsSorted)));
+
+// Angular needs it to prerender blog posts
+const routes = [];
+postsSorted.forEach(p => p.languageVersions.forEach(lv => {
+  routes.push(`${ngPostBaseUrl}/${lv.path.replace(".html", "")}`);
+}));
+
+adiagoPromises.push(fs.writeFile(path.join(__dirname, "routes.txt"), routes.join("\n")));
 
 await Promise.all(adiagoPromises);
