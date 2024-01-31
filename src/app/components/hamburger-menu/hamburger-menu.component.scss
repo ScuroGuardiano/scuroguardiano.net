@@ -1,0 +1,27 @@
+.backdrop {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+button {
+  display: block;
+  background-color: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  svg {
+    color: var(--fg);
+    display: block;
+  }
+}
+
+.hamburga-menu {
+  position: absolute;
+  background-color: var(--bg-2);
+  right: 0;
+  width: min(200px, 100%);
+}

@@ -1,18 +1,39 @@
 <header>
-  <ul class="menu">
-    <li>
-      <a routerLink="/">{{ 'header.home' | transloco }}</a>
-    </li>
-    <li>
-      <a routerLink="/projects">{{ 'header.projects' | transloco }}</a>
-    </li>
-    <li>
-      <a routerLink="/blog">{{ 'header.blog' | transloco }}</a>
-    </li>
-    <li>
-      <a href="https://github.com/ScuroGuardiano" target="_blank">Github</a>
-    </li>
-  </ul>
+  <div class="header-left">
+    <ul class="menu">
+      <li>
+        <a routerLink="/">{{ 'header.home' | transloco }}</a>
+      </li>
+      <li>
+        <a routerLink="/projects">{{ 'header.projects' | transloco }}</a>
+      </li>
+      <li>
+        <a routerLink="/blog">{{ 'header.blog' | transloco }}</a>
+      </li>
+      <li>
+        <a href="https://github.com/ScuroGuardiano" target="_blank">Github</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="header-right">
+    <app-hamburger-menu>
+      <ul class="hmenu">
+        <li>
+          <a routerLink="/">{{ 'header.home' | transloco }}</a>
+        </li>
+        <li>
+          <a routerLink="/projects">{{ 'header.projects' | transloco }}</a>
+        </li>
+        <li>
+          <a routerLink="/blog">{{ 'header.blog' | transloco }}</a>
+        </li>
+        <li>
+          <a href="https://github.com/ScuroGuardiano" target="_blank">Github</a>
+        </li>
+      </ul>
+    </app-hamburger-menu>
+  </div>
 </header>
 <main class="layout-main">
   <ng-content></ng-content>

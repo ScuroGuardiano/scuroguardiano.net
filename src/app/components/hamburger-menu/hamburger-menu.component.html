@@ -1,0 +1,13 @@
+<button class="open-hamburga-menu" id="hamburga" (click)="toggle()">
+  <svg viewBox="0 0 100 70" width="40" height="40">
+    <rect fill="currentColor" width="100" height="10"></rect>
+    <rect fill="currentColor" y="30" width="100" height="10"></rect>
+    <rect fill="currentColor" y="60" width="100" height="10"></rect>
+  </svg>
+</button>
+
+@if (menuOpened()) {
+  <div class="hamburga-menu">
+    <ng-content></ng-content>
+  </div>
+}

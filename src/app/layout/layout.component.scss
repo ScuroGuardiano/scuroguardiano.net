@@ -13,35 +13,41 @@ main {
   align-items: center;
 }
 
-.header-art {
-  position: absolute;
-}
-
 header {
   display: flex;
+  justify-content: space-between;
   position: relative;
   gap: 2rem;
   background-color: var(--bg-2);
 }
 
-.header-art {
-  left: 50%;
-  transform: translate(-50%, -30%);
+.menu {
+  width: 100%;
+  display: none;
 }
 
-.header-art {
-  svg {
-    width: 400px;
-    height: 400px;
+@media (min-width: 800px) {
+  .menu {
+    display: flex;
+  }
+  app-hamburger-menu {
+    display: none;
   }
 }
 
-.menu {
+.hmenu {
   width: 100%;
+  display: block;
 }
 
-.left-menu {
-  justify-content: flex-end;
+.header-right {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+app-hamburger-menu {
+  margin-right: 1rem;
 }
 
 ul {
