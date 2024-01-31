@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { TranslocoHttpLoader } from './transloco-loader';
-import { provideTransloco } from '@ngneat/transloco';
+import { getBrowserLang, provideTransloco } from '@ngneat/transloco';
 import { provideTranslocoLocale } from '@ngneat/transloco-locale';
 
 export const appConfig: ApplicationConfig = {
@@ -16,7 +16,8 @@ export const appConfig: ApplicationConfig = {
     provideTransloco({
       config: {
         availableLangs: ['en', 'pl'],
-        defaultLang: 'pl',
+        defaultLang: getBrowserLang() ?? "en",
+        fallbackLang: "en",
         // Remove this option if your application doesn't support changing language in runtime.
         reRenderOnLangChange: true,
         prodMode: !isDevMode(),

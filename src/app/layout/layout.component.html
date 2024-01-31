@@ -17,6 +17,9 @@
   </div>
 
   <div class="header-right">
+    <button class="lang-change" title="Click to change language" (click)="changeLang()">
+      {{ currentLang$ | async }}
+    </button>
     <app-hamburger-menu>
       <ul class="hmenu">
         <li>

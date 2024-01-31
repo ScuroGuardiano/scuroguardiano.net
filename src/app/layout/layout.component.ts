@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
 import { HamburgerMenuComponent } from "../components/hamburger-menu/hamburger-menu.component";
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-layout',
@@ -11,9 +12,19 @@ import { HamburgerMenuComponent } from "../components/hamburger-menu/hamburger-m
     imports: [
         RouterLink,
         TranslocoPipe,
-        HamburgerMenuComponent
+        HamburgerMenuComponent,
+        AsyncPipe
     ]
 })
 export class LayoutComponent {
+  #translocoService = inject(TranslocoService);
 
+  currentLang$ = this.#translocoService.langChanges$;
+
+  changeLang() {
+    // Yeah ugly, idc, I will ever support only those 2 languages, so I can hardcore it like that
+    this.#translocoService.setActiveLang(
+      this.#translocoService.getActiveLang() == "pl" ? "en" : "pl"
+    );
+  }
 }
