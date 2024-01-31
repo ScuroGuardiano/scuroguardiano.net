@@ -19,5 +19,6 @@
   "projects": {
     "smartArrayReader": "Prosty program do odczytywania danych i metadanych z logicznych dysków utworzonych przy użyciu kontrolerów HP Smart Array. Wspiera RAID 0, 1, 5, 6, 10, 50 i 60, a także wiele logicznych dysków na jednej macierzy.",
     "nextbooru": "Prosty w hostowaniu i szybki taggable image board, czyli platforma do hostowania obrazków wyszukiwanych za pomocą tagów. Prace w trakcie."
-  }
+  },
+  "version": "Strona w wersji Alpha"
 }

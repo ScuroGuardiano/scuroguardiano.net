@@ -19,5 +19,6 @@
   "projects": {
     "smartArrayReader": "A simple program to read data and metadata from logical drives created with HP Smart Array controllers. It supports RAID 0, 1, 5, 6, 10, 50 and 60 aswell as many logical drives on single array.",
     "nextbooru": "Simple to host and fast taggable image board. Platform to host images that are searchable by tags. Work in progress."
-  }
+  },
+  "version": "Site is in version Alpha"
 }
