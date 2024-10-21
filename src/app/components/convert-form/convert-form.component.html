@@ -1,0 +1,50 @@
+<div class="selected">
+  <div class="preview">
+    <img [src]="urlObj()" #img (load)="onImgLoad(img)" />
+    <p class="caption">{{ img.naturalWidth }}x{{ img.naturalHeight }} {{ size() }}</p>
+  </div>
+  @if (!prieviewOnly()) {
+  <form class="conversion-options" (submit)="submit($event)">
+
+    <div class="controls">
+      <div class="control">
+        <label for="format">{{ "imageConvert.format" | transloco }}</label>
+        <select id="format" name="format" (change)="onChangeFormat($event)" required>
+          @for (f of availableFormats(); track f) {
+          <option [value]="f" [selected]="format() == f">{{ f }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="control">
+        <label for="width">{{ "imageConvert.width" | transloco }}</label>
+        <input type="number" id="width" name="width" (input)="onChangeWidth($event)" [value]="width()" required />
+      </div>
+
+      <div class="control" title="{{ 'imageConvert.keepAspect' | transloco }}">
+        <label for="aspect">&lt;=&gt;</label>
+        <input type="checkbox" id="aspect" name="aspect" [(ngModel)]="keepAspect" />
+      </div>
+
+      <div class="control">
+        <label for="height">{{ "imageConvert.height" | transloco }}</label>
+        <input type="number" id="height" name="height" (input)="onChangeHeight($event)" [value]="height()" required />
+      </div>
+
+      <div class="control">
+        <label for="quality">{{ "imageConvert.quality" | transloco }}</label>
+        <input type="number" id="quality" name="quality" [(ngModel)]="quality" [disabled]="disableQuality()" />
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="submit-btn-wrapper">
+      <button type="submit" class="btn btn-accent">{{ "imageConvert.convert" | transloco }}</button>
+      <button type="button" class="btn btn-accent" (click)="changeImage()">{{ "imageConvert.changeImage" | transloco
+        }}</button>
+    </div>
+
+  </form>
+  }
+</div>

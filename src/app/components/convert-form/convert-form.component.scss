@@ -1,0 +1,37 @@
+.preview {
+  text-align: center;
+}
+.preview img {
+  max-width: 800px;
+  max-height: 400px;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+
+  justify-content: center;
+
+  label {
+    display: block;
+    text-align: center;
+  }
+
+  .control {
+    text-align: center;
+  }
+}
+
+.caption {
+  text-align: center;
+}
+
+.submit-btn-wrapper {
+  margin-top: 1rem;
+  text-align: center;
+
+  button {
+    margin-left: 1rem;
+    margin-right: rem;
+  }
+}

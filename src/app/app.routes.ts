@@ -36,6 +36,10 @@ export const routes: Routes = [
     loadComponent: () => import("./pages/projects/projects.component")
   },
   {
+    path: "image-conversion",
+    loadComponent: () => import("./pages/image-convert/image-convert.component")
+  },
+  {
     matcher: blogPostMatcher,
     loadComponent: () => import("./pages/blog/post.component")
   }

@@ -1,0 +1,38 @@
+@if (err() != "") {
+  <h2>{{ "error" | transloco }}</h2>
+  <p>{{ err() }}</p>
+}
+@else {
+  @if (availableFormats$ | async; as formats) {
+    <main>
+      @if (!result() && file()!; as file) {
+        <app-convert-form
+          [file]="file"
+          [availableFormats]="formats"
+          [prieviewOnly]="operationType() !== 'idle'"
+          (cancel)="changeImage()"
+          (convert)="convert($event)"
+        />
+
+        @if (operationType() !== 'idle') {
+          <h2>{{ operationCaption() }}</h2>
+          <app-upload-progress [total]="progressTotal() ?? 0" [uploaded]="progressDone()"/>
+        }
+      }
+      @else if (result()) {
+        <h2>{{ "imageConvert.result" | transloco }}</h2>
+        <img class="result" [src]="resultUrlObj()" />
+        <div class="controls">
+          <button class="btn btn-accent" (click)="result.set(null)">{{ "imageConvert.convertSame" | transloco }}</button>
+          <button class="btn btn-accent" (click)="changeImage()">{{ "imageConvert.convertNew" | transloco }}</button>
+        </div>
+      }
+      @else {
+        <app-image-upload (file)="setFile($event)"/>
+      }
+    </main>
+  }
+  @else {
+    <h2>{{ "loading" | transloco }}</h2>
+  }
+}

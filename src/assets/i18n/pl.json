@@ -1,4 +1,6 @@
 {
+  "loading": "Ładowanie...",
+  "error": "Wystąpił błąd.",
   "seo": {
     "description": "Ukryty w swojej piwnicy programista .NET oraz Angulara."
   },
@@ -6,7 +8,8 @@
     "home": "Strona główna",
     "projects": "Projekty",
     "blog": "Blog",
-    "about": "O mnie"
+    "about": "O mnie",
+    "imageConvert": "Konwersja obrazów"
   },
   "blog": {
     "heading": "Posty na blogu"
@@ -19,6 +22,23 @@
   "projects": {
     "smartArrayReader": "Prosty program do odczytywania danych i metadanych z logicznych dysków utworzonych przy użyciu kontrolerów HP Smart Array. Wspiera RAID 0, 1, 5, 6, 10, 50 i 60, a także wiele logicznych dysków na jednej macierzy.",
     "nextbooru": "Prosty w hostowaniu i szybki taggable image board, czyli platforma do hostowania obrazków wyszukiwanych za pomocą tagów. Prace w trakcie."
+  },
+  "imageConvert": {
+    "drop": "Upuść obraz tutaj",
+    "or": "lub",
+    "browse": "Przeglądaj pliki...",
+    "format": "Format",
+    "width": "Szerokość",
+    "height": "Wysokość",
+    "keepAspect": "Zachowaj proporcje obrazu.",
+    "quality": "Jakość",
+    "convert": "Konwertuj",
+    "changeImage": "Wybierz inny obraz",
+    "uploading": "Wysyłanie...",
+    "downloading": "Pobieranie...",
+    "convertSame": "Zmień opcje konwersji",
+    "convertNew": "Zmień obraz",
+    "result": "Wynikowy obraz"
   },
   "version": "Strona w wersji Alpha"
 }

@@ -1,0 +1,13 @@
+<div
+  class="dropzone"
+  (dragenter)="onDragEnter($event)"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onDrop($event)"
+  [ngClass]="classes()"
+>
+  <p>{{ "imageConvert.drop" | transloco }}</p>
+  <p>{{ "imageConvert.or" | transloco }}</p>
+  <button class="btn btn-accent" (click)="input.click()">{{ "imageConvert.browse" | transloco }}</button>
+  <input (input)="onUpload($event)" type="file" accept="image/*" name="file" hidden #input/>
+</div>

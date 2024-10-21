@@ -1,13 +1,28 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <style>
+    .no-transition * {
+        -webkit-transition: none !important;
+        -moz-transition: none !important;
+        -ms-transition: none !important;
+        -o-transition: none !important;
+        transition: none !important;
+    }
+  </style>
   <meta charset="utf-8">
   <title>ScuroguardianoNet</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
-<body>
+<body class="no-transition">
   <app-root></app-root>
+  <script>
+    // prevents transition on page load
+    window.addEventListener("DOMContentLoaded", () => {
+      document.body.classList.remove("no-transition");
+    });
+  </script>
 </body>
 </html>

@@ -1,4 +1,6 @@
 {
+  "loading": "Loading...",
+  "error": "Error occured.",
   "seo": {
     "description": "Hidden in his basement .NET and Angular programmer."
   },
@@ -6,7 +8,8 @@
     "home": "Home",
     "projects": "Projects",
     "blog": "Blog",
-    "about": "About"
+    "about": "About",
+    "imageConvert": "Image Conversion"
   },
   "blog": {
     "heading": "Blog posts"
@@ -19,6 +22,23 @@
   "projects": {
     "smartArrayReader": "A simple program to read data and metadata from logical drives created with HP Smart Array controllers. It supports RAID 0, 1, 5, 6, 10, 50 and 60 aswell as many logical drives on single array.",
     "nextbooru": "Simple to host and fast taggable image board. Platform to host images that are searchable by tags. Work in progress."
+  },
+  "imageConvert": {
+    "drop": "Drop image here",
+    "or": "or",
+    "browse": "Browse files...",
+    "format": "Format",
+    "width": "Width",
+    "height": "Height",
+    "keepAspect": "Keep aspect ratio.",
+    "quality": "Quality",
+    "convert": "Convert",
+    "changeImage": "Change image",
+    "uploading": "Uploading...",
+    "downloading": "Downloading...",
+    "convertSame": "Change conversion options",
+    "convertNew": "Change image",
+    "result": "Result image"
   },
   "version": "Site is in version Alpha"
 }

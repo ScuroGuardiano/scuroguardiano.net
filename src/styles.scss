@@ -11,6 +11,7 @@ html, body {
   --fg-3: rgba(255, 255, 255, 0.65);
   --fg-4: rgba(255, 255, 255, 0.6);
   --fg-5: rgba(255, 255, 255, 0.4);
+  --fg-6: rgba(255, 255, 255, 0.25);
   --bg: #111;
   --bg-2: #151515;
   --bg-3: #242424;
@@ -54,6 +55,22 @@ a:hover {
   text-decoration: underline;
 }
 
+.btn {
+  border: solid 1px var(--fg-3);
+  padding: .5rem 1rem;
+  background-color: transparent;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.btn-accent {
+  color: var(--accent);
+  &:hover {
+    color: var(--bg-2);
+    background-color: var(--accent);
+  }
+}
+
 .layout-main > * {
   width: 100%;
 }
@@ -89,4 +106,26 @@ a:hover {
   h1, h2, h3, h4, h5, h6 {
     margin-top: 1.5em;
   }
+}
+
+select {
+  background-color: transparent;
+  color: var(--fg-2);
+  border: 1px solid var(--fg-3);
+}
+
+input {
+  background-color: transparent;
+  color: var(--fg-2);
+  border: 1px solid var(--fg-3);
+}
+
+input[type=number] {
+  appearance: textfield;
+}
+
+input:disabled {
+  color: var(--fg-6);
+  border-color: var(--fg-6);
+  cursor: not-allowed;
 }
