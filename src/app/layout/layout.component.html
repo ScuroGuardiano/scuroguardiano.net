@@ -1,21 +1,7 @@
 <header>
   <div class="header-left">
     <ul class="menu">
-      <li>
-        <a routerLink="/">{{ 'header.home' | transloco }}</a>
-      </li>
-      <li>
-        <a routerLink="/projects">{{ 'header.projects' | transloco }}</a>
-      </li>
-      <li>
-        <a routerLink="/blog">{{ 'header.blog' | transloco }}</a>
-      </li>
-      <li>
-        <a routerLink="/image-conversion">{{ 'header.imageConvert' | transloco }}</a>
-      </li>
-      <li>
-        <a href="https://github.com/ScuroGuardiano" target="_blank">Github</a>
-      </li>
+      <ng-container *ngTemplateOutlet="nav" />
     </ul>
   </div>
 
@@ -25,21 +11,7 @@
     </button>
     <app-hamburger-menu>
       <ul class="hmenu">
-        <li>
-          <a routerLink="/">{{ 'header.home' | transloco }}</a>
-        </li>
-        <li>
-          <a routerLink="/projects">{{ 'header.projects' | transloco }}</a>
-        </li>
-        <li>
-          <a routerLink="/image-conversion">{{ 'header.imageConvert' | transloco }}</a>
-        </li>
-        <li>
-          <a routerLink="/blog">{{ 'header.blog' | transloco }}</a>
-        </li>
-        <li>
-          <a href="https://github.com/ScuroGuardiano" target="_blank">Github</a>
-        </li>
+        <ng-container *ngTemplateOutlet="nav" />
       </ul>
     </app-hamburger-menu>
   </div>
@@ -51,3 +23,24 @@
   <p>Copyright © 2024 Scuro Guardiano</p>
   <p>{{ "version" | transloco }}</p>
 </footer>
+
+<ng-template #nav>
+  <li>
+    <a routerLink="/">{{ 'header.home' | transloco }}</a>
+  </li>
+  <li>
+    <a routerLink="/projects">{{ 'header.projects' | transloco }}</a>
+  </li>
+  <li>
+    <a routerLink="/blog">{{ 'header.blog' | transloco }}</a>
+  </li>
+  <li>
+    <a routerLink="/image-conversion">{{ 'header.imageConvert' | transloco }}</a>
+  </li>
+  <li>
+    <a routerLink="/physics">{{ 'header.physics' | transloco }}</a>
+  </li>
+  <li>
+    <a href="https://github.com/ScuroGuardiano" target="_blank">Github</a>
+  </li>
+</ng-template>

@@ -46,7 +46,8 @@ export class AppComponent implements OnInit {
 
   #disableParticlesConditions: ((url: string) => boolean)[] = [
     url => /^\/blog\/.+/gm.test(url),
-    url => /^\/projects\/.+/gm.test(url)
+    url => /^\/projects\/.+/gm.test(url),
+    url => /^\/physics/gm.test(url)
   ];
 
   getParticlesCount() {

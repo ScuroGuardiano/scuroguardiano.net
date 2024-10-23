@@ -1,0 +1,12 @@
+<nav>
+  <h3>Menú</h3>
+  <ul>
+    @for (el of menu; track el.routerLink) {
+      <li><a [routerLink]="el.routerLink" class="fullhover">{{ el.title }}</a></li>
+    }
+  </ul>
+</nav>
+
+<main>
+  <router-outlet></router-outlet>
+</main>

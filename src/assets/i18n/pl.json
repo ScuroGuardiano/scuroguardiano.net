@@ -9,7 +9,8 @@
     "projects": "Projekty",
     "blog": "Blog",
     "about": "O mnie",
-    "imageConvert": "Konwersja obrazów"
+    "imageConvert": "Konwersja obrazów",
+    "physics": "Fizyka"
   },
   "blog": {
     "heading": "Posty na blogu"

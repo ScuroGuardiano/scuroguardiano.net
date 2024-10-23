@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
 import { HamburgerMenuComponent } from "../components/hamburger-menu/hamburger-menu.component";
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 
 @Component({
     selector: 'app-layout',
@@ -13,7 +13,8 @@ import { AsyncPipe } from '@angular/common';
         RouterLink,
         TranslocoPipe,
         HamburgerMenuComponent,
-        AsyncPipe
+        AsyncPipe,
+        NgTemplateOutlet
     ]
 })
 export class LayoutComponent {

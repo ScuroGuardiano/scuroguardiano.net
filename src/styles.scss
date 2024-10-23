@@ -54,6 +54,9 @@ a {
 a:hover {
   text-decoration: underline;
 }
+a.active {
+  text-decoration: underline;
+}
 
 .btn {
   border: solid 1px var(--fg-3);
@@ -114,7 +117,7 @@ select {
   border: 1px solid var(--fg-3);
 }
 
-input {
+input, textarea {
   background-color: transparent;
   color: var(--fg-2);
   border: 1px solid var(--fg-3);

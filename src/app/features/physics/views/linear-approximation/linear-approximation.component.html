@@ -1,0 +1,37 @@
+<h2>Aproksymacja liniowa metodą najmniejszych kwadratów</h2>
+
+<div class="content">
+  <div class="input">
+    <label for="xy-input">
+      Wprowadź dane wejściowe po jednej parze X i Y na linię.<br>
+      Oddziel je spacjami lub tabami.<br>
+      Możesz zrobić CTRL+C CTRL+V z Excela jak masz kolumny X i Y
+    </label>
+    <textarea id="xy-input" placeholder="1 1.5&#10;2 3&#10;3 4.5" (input)="handleChange($any($event.target))" #inputField></textarea>
+  </div>
+
+  @if (inputValid()) {
+  <div class="result">
+    <h3>Wynik:</h3>
+
+    <div class="katex-out" [innerHTML]="katexOut()"></div>
+  </div>
+
+  <div class="detailed-result">
+    @if (detailedVisible()) {
+      <h3>Szczegóły obliczeń:</h3>
+      <button class="btn btn-accent" (click)="detailedVisible.set(false)">Ukryj</button>
+      <div [innerHTML]="detailedKatex()"></div>
+    }
+    @else {
+      <button class="btn btn-accent" (click)="detailedVisible.set(true)">Pokaż szczegóły</button>
+    }
+  </div>
+  }
+  @else if (error()) {
+    <p>Błąd na wejściu: {{error()}}</p>
+  }
+  @else {
+    <p>Wprowadź dane. Musisz wprowadzić minimum 3 rekordy.</p>
+  }
+</div>

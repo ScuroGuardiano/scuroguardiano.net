@@ -40,6 +40,10 @@ export const routes: Routes = [
     loadComponent: () => import("./pages/image-convert/image-convert.component")
   },
   {
+    path: "physics",
+    loadChildren: () => import("./features/physics/physics.module").then(m => m.PhysicsModule)
+  },
+  {
     matcher: blogPostMatcher,
     loadComponent: () => import("./pages/blog/post.component")
   }
