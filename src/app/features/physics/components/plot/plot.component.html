@@ -1,0 +1,28 @@
+<svg [attr.viewBox]="'0 0 ' + plotViewBox.width + ' ' + plotViewBox.height" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .label {
+      font: 24px sans-serif;
+      fill: white;
+    }
+  </style>
+
+
+  <line x1="5%" y1="95%" x2="95%" y2="95%" class="axis" />
+  <line x1="5%" y1="95%" x2="5%" y2="5%" class="axis"/>
+
+  <text text-anchor="end" x="4.5%" y="6.5%" class="label">{{ yAxis().label }}</text>
+  <text text-anchor="end" x="94.5%" y="96.5%" class="label">{{ xAxis().label }}</text>
+
+  @for (line of lines(); track $index) {
+    <line [attr.x1]="line.x1 + '%'" [attr.y1]="line.y1 + '%'" [attr.x2]="line.x2 + '%'" [attr.y2]="line.y2 + '%'" [class]="line.class" />
+  }
+
+  @for (point of points(); track $index) {
+    <circle [attr.cx]="point.x + '%'" [attr.cy]="point.y + '%'" r="4" class="point"/>
+  }
+
+  @for (label of labels(); track $index) {
+    <text text-anchor="end" [attr.x]="label.x + '%'" [attr.y]="label.y + '%'" [class]="label.class">{{ label.text }}</text>
+  }
+
+</svg>

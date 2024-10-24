@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+svg {
+  border: solid 1px var(--fg-4);
+  display: block;
+
+  .label, .ruler-label {
+    font: 24px sans-serif;
+    fill: white;
+  }
+
+  .axis, .error, .plotted-line, .ruler-axis {
+    stroke: white;
+  }
+
+  .ruler-plot {
+    stroke: rgba(255, 255, 255, 0.2);
+  }
+
+  .point {
+    fill: white;
+  }
+}

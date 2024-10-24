@@ -10,7 +10,7 @@ export class PhysicsComponent {
   #transolocoService = inject(TranslocoService);
 
   readonly menu = [
-    { title: "Aproksymacja liniowa", routerLink: "line-approximation" },
-    // { title: "Wykres liniowy", routerLink: "plot" },
+    { title: "Aproksymacja liniowa", routerLink: "linear-approximation" },
+    { title: "Wykres liniowy", routerLink: "linear-plot" },
   ]
 }
