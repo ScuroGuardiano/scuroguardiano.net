@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, ElementRef, input, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-plot',
@@ -6,6 +6,12 @@ import { Component, computed, input } from '@angular/core';
   styleUrl: './plot.component.scss'
 })
 export class PlotComponent {
+  @ViewChild("svg") svgEl: ElementRef<SVGElement> = null!;
+
+  getSVG() {
+    return this.svgEl.nativeElement.outerHTML;
+  }
+
   readonly plotMarginPercent = 5;
   readonly plotViewBox = { width: 2970, height: 2100 };
   readonly uncertaintyEndingLineHalfLen = 0.3;

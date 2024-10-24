@@ -2,3 +2,43 @@
   height: 100%;
   width: 100%;
 }
+
+.preview {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  >* {
+    width: 40%;
+  }
+  h3 {
+    text-align: center;
+  }
+}
+
+form {
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+
+  fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+
+  .control {
+    display: flex;
+    gap: .5rem;
+    justify-content: end;
+  }
+
+  .control-column {
+    display: flex;
+    gap: .5rem;
+    flex-direction: column;
+  }
+
+  textarea {
+    height: 200px;
+  }
+}

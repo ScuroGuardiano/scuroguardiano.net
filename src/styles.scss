@@ -132,3 +132,7 @@ input:disabled {
   border-color: var(--fg-6);
   cursor: not-allowed;
 }
+
+.ng-dirty.ng-invalid {
+  border-color: crimson;
+}

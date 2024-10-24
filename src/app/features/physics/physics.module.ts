@@ -6,17 +6,19 @@ import { PhysicsComponent } from './views/physics/physics.component';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { LinearPlotComponent } from './views/linear-plot/linear-plot.component';
 import { PlotComponent } from './components/plot/plot.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
   declarations: [
     PhysicsComponent,
     LinearPlotComponent,
-    PlotComponent
+    PlotComponent,
   ],
   imports: [
     CommonModule,
-    PhysicsRoutingModule
+    PhysicsRoutingModule,
+    ReactiveFormsModule
   ]
 })
 export class PhysicsModule { }

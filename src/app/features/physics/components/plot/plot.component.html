@@ -1,12 +1,4 @@
-<svg [attr.viewBox]="'0 0 ' + plotViewBox.width + ' ' + plotViewBox.height" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .label {
-      font: 24px sans-serif;
-      fill: white;
-    }
-  </style>
-
-
+<svg [attr.viewBox]="'0 0 ' + plotViewBox.width + ' ' + plotViewBox.height" xmlns="http://www.w3.org/2000/svg" #svg>
   <line x1="5%" y1="95%" x2="95%" y2="95%" class="axis" />
   <line x1="5%" y1="95%" x2="5%" y2="5%" class="axis"/>
 
@@ -24,5 +16,4 @@
   @for (label of labels(); track $index) {
     <text text-anchor="end" [attr.x]="label.x + '%'" [attr.y]="label.y + '%'" [class]="label.class">{{ label.text }}</text>
   }
-
 </svg>

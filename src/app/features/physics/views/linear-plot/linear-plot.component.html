@@ -1,1 +1,86 @@
-<app-plot [plotInit]="plotInit" />
+<form class="plottin" [formGroup]="formGroup" >
+  <div class="plottin-left">
+    <fieldset>
+      <legend>Linia</legend>
+      <div class="control">
+        <label for="line-a">a:</label>
+        <input type="number" id="line-a" name="lineA" formControlName="lineA" />
+      </div>
+      <div class="control">
+        <label for="line-b">b:</label>
+        <input type="number" id="line-b" name="lineB" formControlName="lineB" />
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Punkty</legend>
+      <div class="control-column">
+        <label for="points">
+          Po jednej parze x i y oddzielonych spacją lub tabem na linię.
+        </label>
+        <textarea id="points" name="points" formControlName="points"></textarea>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Błędy pomiarowe</legend>
+      <div class="control">
+        <label for="error-x">u(x):</label>
+        <input type="number" id="error-x" name="errorX" formControlName="errorX"/>
+      </div>
+      <div class="control">
+        <label for="error-y">u(y):</label>
+        <input type="number" id="error-y" name="errorY" formControlName="errorY"/>
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="plottin-right">
+    <fieldset>
+      <legend>Osie</legend>
+      <p>Podziałki oddziel spacjami</p>
+      <fieldset>
+        <legend>Oś X</legend>
+        <div class="control">
+          <label for="axis-x-label">Etykieta osi:</label>
+          <input type="text" id="axis-x-label" name="axisXLabel" formControlName="axisXLabel" />
+        </div>
+        <div class="control">
+          <label for="axis-x-start">Wartość początkowa osi:</label>
+          <input type="number" id="axis-x-start" name="axisXStart" formControlName="axisXStart" />
+        </div>
+        <div class="control">
+          <label for="axis-x-end">Wartość końcowa osi:</label>
+          <input type="number" id="axis-x-end" name="axisXEnd" formControlName="axisXEnd" />
+        </div>
+        <div class="control">
+          <label for="axis-x-rulers">Podziałki osi x:</label>
+          <input type="text" id="axis-x-rulers" name="axisXRulers" formControlName="axisXRulers" />
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Oś Y</legend>
+        <div class="control">
+          <label for="axis-y-label">Etykieta osi:</label>
+          <input type="text" id="axis-y-label" name="axisYLabel" formControlName="axisYLabel" />
+        </div>
+        <div class="control">
+          <label for="axis-y-start">Wartość początkowa osi:</label>
+          <input type="number" id="axis-y-start" name="axisYStart" formControlName="axisYStart" />
+        </div>
+        <div class="control">
+          <label for="axis-y-end">Wartość końcowa osi:</label>
+          <input type="number" id="axis-y-end" name="axisYEnd" formControlName="axisYEnd" />
+        </div>
+        <div class="control">
+          <label for="axis-y-rulers">Podziałki osi y:</label>
+          <input type="text" id="axis-y-rulers" name="axisYRulers" formControlName="axisYRulers" />
+        </div>
+      </fieldset>
+    </fieldset>
+  </div>
+</form>
+
+<div class="preview">
+  <h3>Podgląd</h3>
+  <button class="btn btn-accent" (click)="downloadSVG(plot)">Pobierz SVG</button>
+  <app-plot [plotInit]="(plotInit$ | async) ?? {}" #plot/>
+</div>
