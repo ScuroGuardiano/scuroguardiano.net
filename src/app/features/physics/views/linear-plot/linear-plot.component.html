@@ -15,20 +15,11 @@
       <legend>Punkty</legend>
       <div class="control-column">
         <label for="points">
-          Po jednej parze x i y oddzielonych spacją lub tabem na linię.
+          Po jednej parze x i y oddzielonych spacją lub tabem na linię.<br>
+          W kolumnach 3 i 4 możesz dodać błędy pomiarowe, tak o:<br>
+          x y ux uy
         </label>
         <textarea id="points" name="points" formControlName="points"></textarea>
-      </div>
-    </fieldset>
-    <fieldset>
-      <legend>Błędy pomiarowe</legend>
-      <div class="control">
-        <label for="error-x">u(x):</label>
-        <input type="number" id="error-x" name="errorX" formControlName="errorX"/>
-      </div>
-      <div class="control">
-        <label for="error-y">u(y):</label>
-        <input type="number" id="error-y" name="errorY" formControlName="errorY"/>
       </div>
     </fieldset>
   </div>

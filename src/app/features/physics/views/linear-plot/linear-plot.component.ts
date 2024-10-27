@@ -127,6 +127,11 @@ export class LinearPlotComponent {
       .split("\n")
       .filter(line => line.trim() !== "")
       .map(row => row.split(/\s+/))
-      .map(row => ({ x: parseFloat(row[0].replace(",", ".")), y: parseFloat(row[1].replace(",", ".")) }));
+      .map(row => ({
+        x: parseFloat(row[0].replace(",", ".")),
+        y: parseFloat(row[1].replace(",", ".")),
+        ux: row[2] ? parseFloat(row[2].replace(",", ".")) : 0,
+        uy: row[3] ? parseFloat(row[3].replace(",", ".")) : 0
+      }));
   }
 }
