@@ -130,36 +130,34 @@ export class PlotComponent {
 
   points = computed(() => {
     const initPoints = this.plotInit().points;
-    return initPoints.map(point => this.mapPointToSVG(point.x, point.y));
+    return initPoints.map(point => ({ ...this.mapPointToSVG(point.x, point.y), ...this.mapUncertaintyToSVG(point.ux ?? 0, point.uy ?? 0) }));
   });
 
-  errorLines = computed(() => {
-    const { ux, uy } = this.mapUncertaintyToSVG(this.plotInit().ux, this.plotInit().uy);
-    const lines = [] as SVGLine[];
+  errorLines = computed(() => this.points().flatMap(p => this.generateErrorLines(p)));
+
+  generateErrorLines(point: ISVGPoint) {
+    const lines = [];
     const xd = this.uncertaintyEndingLineHalfLen;
+    const { ux, uy } = point;
 
     if (ux !== 0) {
-      for (const point of this.points()) {
         const mainLine = { x1: point.x - ux, x2: point.x + ux, y1: point.y, y2: point.y, class: "error" };
         const leftEnd = { x1: mainLine.x1, x2: mainLine.x1, y1: mainLine.y1 - xd, y2: mainLine.y2 + xd, class: "error end" };
         const rightEnd = { x1: mainLine.x2, x2: mainLine.x2, y1: mainLine.y1 - xd, y2: mainLine.y2 + xd, class: "error end" };
 
         lines.push(mainLine, leftEnd, rightEnd);
-      }
     }
 
     if (uy !== 0) {
-      for (const point of this.points()) {
         const mainLine = { x1: point.x, x2: point.x, y1: point.y - uy, y2: point.y + uy, class: "error" };
         const topEnd = { x1: mainLine.x1 - xd, x2: mainLine.x1 + xd, y1: mainLine.y1, y2: mainLine.y1, class: "error end" };
         const bottomEnd = { x1: mainLine.x2 - xd, x2: mainLine.x2 + xd, y1: mainLine.y2, y2: mainLine.y2, class: "error end" };
 
         lines.push(mainLine, topEnd, bottomEnd);
-      }
     }
 
     return lines;
-  });
+  }
 
   mapPointToSVG(x: number, y: number): { x: number, y: number } {
     const drawAreaPercent = 100 - this.plotMarginPercent * 2;
@@ -212,6 +210,8 @@ export interface IPlotLine {
 export interface IPlotPoint {
   x: number;
   y: number;
+  ux?: number;
+  uy?: number;
 }
 
 export interface IPlotInit {
@@ -245,4 +245,10 @@ interface SVGLabel {
   y: number;
   class: string;
   text: string;
+}
+interface ISVGPoint {
+  x: number;
+  y: number;
+  ux: number;
+  uy: number;
 }
