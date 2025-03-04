@@ -18,7 +18,7 @@
   "home": {
     "recentPosts": "Recent blog posts",
     "featuredProjects": "Featured projects",
-    "about": "Hidden in his basement .NET and Angular programmer, suvival games player and professional motherboards burner. From time to time also enjoyer of wandering around the neighborhood at night, when it's safe to get out of his cave."
+    "about": "<Insert some edgy line here>"
   },
   "projects": {
     "smartArrayReader": "A simple program to read data and metadata from logical drives created with HP Smart Array controllers. It supports RAID 0, 1, 5, 6, 10, 50 and 60 aswell as many logical drives on single array.",
