@@ -51,9 +51,10 @@ Do środowiska deweloperskiego będziemy potrzebować kilka maszyn wirtualnych p
 - Jakiś Linux - tutaj będziemy ostatecznie hostować aplikację.
 
 Moja konfiguracja to:
-- Windows Server 2019 Standard Evaluation - `VM1401.TEMPLE.LOCAL`
-- Windows 10 Pro - `VM1402.TEMPLE.LOCAL`
-- EndeavourOS - `VM1405.TEMPLE.LOCAL`
+- Domena - `TEMPLE.LOCAL`
+- Windows Server 2019 Standard Evaluation - `VM1401.TEMPLE.LOCAL`, `10.69.3.101`
+- Windows 10 Pro - `VM1402.TEMPLE.LOCAL`, `10.69.3.102`
+- EndeavourOS - `VM1405.TEMPLE.LOCAL`, `10.69.3.105`
 
 Poradnik będzie napisany w oparciu o moją konfigurację.
 
@@ -106,15 +107,150 @@ Na razie to tyle jeżeli chodzi o konfigurację domeny, ale jeszcze tu wrócimy 
 > Cała konfiguracja domenowa tutaj pochodzi z [Arch Linux Wiki](https://wiki.archlinux.org/title/Active_Directory_integration)  
 > Na innej dystrybucji konfiguracja może wyglądać inaczej, zajrzyj do dokumentacji od swojej dystrybucji.
 
-Zainstaluj Linuxa, nazwij go jakoś rozpoznawalnie z końcówką nazwy domeny. U mnie to będzie `VM1405.TEMPLE.LOCAL`,
-następnie musisz go dołączyć do domeny. Oto w jaki sposób zrobiłem to na EndeavourOS z KDE:
+Zainstaluj Linuxa, nazwij go jakoś rozpoznawalnie. U mnie to będzie `vm1405`,
+następnie musisz go dołączyć do domeny. Oto poradnik dla Arch Linux:
 
-TODO
+### 1. Serwer DNS
+
+Ustaw adres serwera DNS na adres Windows Server (u mnie `10.69.3.101`), a domeny wyszukiwania na swoją domenę - u mnie `temple.local`.
+Dokładnych instrukcji nie podam, bo to zależy od tego czego używasz do sieci, ja robię to na KDE z NetworkManager,
+więc wszedłem w ustawienia sieci i tam to wpisałem. Może być koniecznie zrestartowanie Twojego network managera.
+
+Zweryfikuj poprawnie ustawienie pingując serwer po jego nazwie domenowej oraz za pomocą `nslookup`:
+```sh
+nslookup -type=SRV _kerberos._tcp.temple.local
+nslookup -type=SRV _ldap._tcp.temple.local
+```
+   Output powinien wyglądać mniej więcej tak:
+```
+[scuroguardiano@vm1405 ~]$ nslookup -type=SRV _kerberos._tcp.temple.local
+Server:         10.69.3.101
+Address:        10.69.3.101#53
+
+_kerberos._tcp.temple.local     service = 0 100 88 vm1401.temple.local.
+
+[scuroguardiano@vm1405 ~]$ nslookup -type=SRV _ldap._tcp.temple.local   
+Server:         10.69.3.101
+Address:        10.69.3.101#53
+
+_ldap._tcp.temple.local service = 0 100 389 vm1401.temple.local.
+```
+
+### 2. Konfiguracja NTP
+
+Konfiguracja NTP - na wiki Arch Linuxa jest podana konfiguracja pod NTP, ale domyślnie mamy raczej timedatectl, więc
+nie trzeba zmieniać usługi czasu, wystarczy zmodyfikować plik `/etc/systemd/timesyncd.conf`:
+
+```conf
+[Time]
+NTP=vm1401.temple.local # adres Windows Sever
+#FallbackNTP=0.arch.pool.ntp.org 1.arch.pool.ntp.org 2.arch.pool.ntp.org 3.arch.pool.ntp.org
+RootDistanceMaxSec=30 # warto zwiększyć
+#PollIntervalMinSec=32
+#PollIntervalMaxSec=2048
+#ConnectionRetrySec=30
+#SaveIntervalSec=60
+```
+
+Następnie wymagany będzie restart `systemd-timesyncd`: `systemctl restart systemd-timesyncd`.  
+Można zweryfikować konfigurację za pomocą `systemctl status systemd-timesyncd`, output powinien być mniej więcej
+taki:
+
+```
+[scuroguardiano@vm1405 ~]$ systemctl status systemd-timesyncd
+● systemd-timesyncd.service - Network Time Synchronization
+Loaded: loaded (/usr/lib/systemd/system/systemd-timesyncd.service; enabled; preset: enabled)
+Active: active (running) since Mon 2025-04-28 16:26:31 CEST; 4s ago
+Invocation: e9634ccd608d4486a681033bd11dbd19
+Docs: man:systemd-timesyncd.service(8)
+Main PID: 806 (systemd-timesyn)
+Status: "Contacted time server 10.69.3.101:123 (vm1401.temple.local)."
+Tasks: 2 (limit: 9492)
+Memory: 1.5M (peak: 2.4M)
+CPU: 27ms
+CGroup: /system.slice/systemd-timesyncd.service
+└─806 /usr/lib/systemd/systemd-timesyncd
+```
+
+Widzimy tutaj, w `Status`, że skontaktowała się usługa z naszym serwerem.
+
+### 3. Konfiguracja Samby
+
+Zainstaluj `samba` oraz `smbclient`:
+```
+# pacman -S samba smbclient
+```
+
+Utwórz plik `/etc/krb5.conf` z taką zawartością, podstawiając swoje adresy domenowe:
+```conf
+[libdefaults]
+  default_realm = TEMPLE.LOCAL
+  dns_lookup_realm = false
+  dns_lookup_kdc = true
+
+[realms]
+  INTERNAL.DOMAIN.TLD = {
+    kdc = VM1401.TEMPLE.LOCAL
+    default_domain = TEMPLE.LOCAL
+    admin_server = VM1401.TEMPLE.LOCAL
+  }
+  INTERNAL = {
+    kdc = VM1401.TEMPLE.LOCAL
+    default_domain = TEMPLE.LOCAL
+    admin_server = VM1401.TEMPLE.LOCAL
+  }
+
+[domain_realm]
+  .internal.domain.tld = TEMPLE.LOCAL
+
+[appdefaults]
+  pam = {
+    ticket_lifetime = 1d
+    renew_lifetime = 1d
+    forwardable = true
+    proxiable = false
+    minimum_uid = 1
+  }
+```
+
+Utwórz plik `/etc/samba/smb.conf` z taką zawartością, podstawiając swoje adresy domenowe:
+```
+[global]
+   workgroup = TEMPLE
+   security = ADS
+   realm = TEMPLE.LOCAL
+
+   winbind refresh tickets = Yes
+   vfs objects = acl_xattr
+   map acl inherit = Yes
+   store dos attributes = Yes
+
+   # Allow a single, unified keytab to store obtained Kerberos tickets
+   dedicated keytab file = /etc/krb5.keytab
+   kerberos method = secrets and keytab
+
+   # Do not require that login usernames include the default domain
+   winbind use default domain = yes
+
+   # Nie będziemy używać drukarek:
+   load printers = no
+   printing = bsd
+   printcap name = /dev/null
+   disable spoolss = yes
+```
+
+### 4. Dołącz do domeny i włącz sambę:
+```
+# net ads join -U Administrator
+# systemctl enable --now smb
+# systemctl enable --now nmb
+# systemctl enable --now winbind
+```
 
 # Windows Authentication w ASP.NET
 
 > [!NOTE]
-> Dla aplikacji demonstracynej użyję Blazor.
+> Dla aplikacji demonstracynej użyję aplikacji Blazor.
 
 Stwórz aplikację Blazor:
 ![Visual Studio - Tworzenie aplikacji Blazor](https://scuroguardiano.net/assets/winauth/1.png)
@@ -211,14 +347,14 @@ Zmień również zawartość pliku `Components/Pages/Home.razor` na:
 Uruchom teraz aplikację, jeżeli zrobiłeś wszystko poprawnie to powinieneś zobaczyć coś mniej więcej takiego:
 ![Edge - odpalona aplikacja z zalogowanym użytkownikiem](https://scuroguardiano.net/assets/winauth/3.png)
 
-## NTLM vs Kerberos
+# NTLM vs Kerberos
 W tym momencie nasza aplikacja zapewne używa NTLM dla autoryzacji. Widać to chociażby po nazwie zalogowanego
 użytkownika. W przypadku NTLM jest to `DOMENA\user`, a w przypadku Kerberos będzie to `user@DOMENA.TLD`. Dla mojego
 przykładu: `TEMPLE\scuroguardiano` dla NTLM oraz `scuroguardiano@TEMPLE.LOCAL` dla Kerberos.
 
 Ma to znaczenie, gdyż na Linuxie **NTLM dla ASP.NET nie jest wspierane**, kropka. Przynajmniej takie było moje
 doświadczenie, jakkolwiek bym nie próbował NTLM po prostu nie działało. Musi być używany Kerberos. A Kerberos ma swoje
-wymagania.
+wymagania, o których opowiem poniżej.
 
 Dla debugowania dodałem sobie taki kod przed `app.UseAuthentication()`:
 ```cs
@@ -246,4 +382,20 @@ if (app.Environment.IsDevelopment())
 
 Nie działa on perfekcyjnie, ale robi robotę.
 
-# 
+# Przenosimy aplikację na Linuxa!
+Teraz spakuj swoją całą aplikację w zipa i przenieś ją na Linuxa, możesz to zrobić za pomocą `scp`:
+```
+scp projekt.zip user@adres_linuxa:/home/user/projekt.zip
+```
+U mnie:
+```
+scp WinAuth.zip scuroguardiano@10.69.3.105:/home/scuroguardiano/WinAuth.zip
+```
+
+W projekcie otwórz plik `Properties/launchSettings.json` i zmień `applicationUrl` na `0.0.0.0:1337`.
+> [!WARNING]
+> Używam tutaj `0.0.0.0` dla uproszczenia, to wystawia aplikację publicznie na wszystkich interfejsach sieciowych i może
+> być potencjalnie niebezpieczne przy nieodpowiedniej konfiguracji firewalla. W naszym przypadku to bez znaczenia, bo
+> jesteśmy na środowisku deweloperskim.
+
+
