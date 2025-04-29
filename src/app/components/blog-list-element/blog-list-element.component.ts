@@ -4,11 +4,10 @@ import { TranslocoDatePipe } from '@ngneat/transloco-locale';
 import { BlogService, SingleLangPostMetadata } from '../../services/blog.service';
 
 @Component({
-  selector: 'app-blog-list-element',
-  standalone: true,
-  imports: [TranslocoDatePipe, RouterLink],
-  templateUrl: './blog-list-element.component.html',
-  styleUrl: './blog-list-element.component.css'
+    selector: 'app-blog-list-element',
+    imports: [TranslocoDatePipe, RouterLink],
+    templateUrl: './blog-list-element.component.html',
+    styleUrl: './blog-list-element.component.css'
 })
 export class BlogListElementComponent {
   #blogService = inject(BlogService);

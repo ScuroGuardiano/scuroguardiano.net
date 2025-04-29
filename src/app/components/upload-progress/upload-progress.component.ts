@@ -2,11 +2,10 @@ import { Component, computed, input } from '@angular/core';
 import { bytesToHuman } from 'src/app/helpers/bytes-to-human';
 
 @Component({
-  selector: 'app-upload-progress',
-  standalone: true,
-  imports: [],
-  templateUrl: './upload-progress.component.html',
-  styleUrl: './upload-progress.component.scss'
+    selector: 'app-upload-progress',
+    imports: [],
+    templateUrl: './upload-progress.component.html',
+    styleUrl: './upload-progress.component.scss'
 })
 export class UploadProgressComponent {
   total = input.required<number>();

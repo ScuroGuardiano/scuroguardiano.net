@@ -23,12 +23,6 @@ html, body {
   line-height: 24px;
   font-weight: 400;
 
-  @media (min-width: 800px) {
-    // On larger screens larger font size makes it better
-    font-size: 18px;
-    line-height: 26px;
-  }
-
   color: var(--fg);
   background-color: var(--bg);
 
@@ -37,6 +31,12 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  @media (min-width: 800px) {
+    // On larger screens larger font size makes it better
+    font-size: 18px;
+    line-height: 26px;
+  }
 }
 
 .blog-post {

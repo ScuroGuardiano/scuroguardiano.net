@@ -4,9 +4,10 @@ import katex from "katex";
 import lineApprox from 'src/app/features/algorithms/linear-approximation';
 
 @Component({
-  selector: 'app-linear-approximation',
-  templateUrl: './linear-approximation.component.html',
-  styleUrl: './linear-approximation.component.scss'
+    selector: 'app-linear-approximation',
+    templateUrl: './linear-approximation.component.html',
+    styleUrl: './linear-approximation.component.scss',
+    standalone: false
 })
 export class LinearApproximationComponent implements AfterViewInit {
   @ViewChild("inputField") inputField: ElementRef<HTMLTextAreaElement> = null!;

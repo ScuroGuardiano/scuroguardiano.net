@@ -11,18 +11,17 @@ import { UploadProgressComponent } from "../../components/upload-progress/upload
 import { HttpEventType, HttpProgressEvent } from '@angular/common/http';
 
 @Component({
-  selector: 'app-image-convert',
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    TranslocoPipe,
-    ImageUploadComponent,
-    FormsModule,
-    ConvertFormComponent,
-    UploadProgressComponent,
-  ],
-  templateUrl: './image-convert.component.html',
-  styleUrl: './image-convert.component.scss',
+    selector: 'app-image-convert',
+    imports: [
+        AsyncPipe,
+        TranslocoPipe,
+        ImageUploadComponent,
+        FormsModule,
+        ConvertFormComponent,
+        UploadProgressComponent,
+    ],
+    templateUrl: './image-convert.component.html',
+    styleUrl: './image-convert.component.scss'
 })
 export default class ImageConvertComponent {
   #imageConversionService = inject(ImageConversionService);

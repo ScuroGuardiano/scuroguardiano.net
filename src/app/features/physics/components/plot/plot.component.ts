@@ -1,9 +1,10 @@
 import { Component, computed, ElementRef, input, ViewChild } from '@angular/core';
 
 @Component({
-  selector: 'app-plot',
-  templateUrl: './plot.component.html',
-  styleUrl: './plot.component.scss'
+    selector: 'app-plot',
+    templateUrl: './plot.component.html',
+    styleUrl: './plot.component.scss',
+    standalone: false
 })
 export class PlotComponent {
   @ViewChild("svg") svgEl: ElementRef<SVGElement> = null!;

@@ -7,21 +7,18 @@ import { Title } from '@angular/platform-browser';
 import { SeoService } from 'src/app/services/seo.service';
 
 @Component({
-  selector: 'app-blog',
-  standalone: true,
-  imports: [
-    TranslocoPipe,
-    BlogPostsListComponent
-  ],
-  template: `
+    selector: 'app-blog',
+    imports: [
+        TranslocoPipe,
+        BlogPostsListComponent
+    ],
+    template: `
     <h1>{{ "blog.heading" | transloco }}</h1>
     @if (posts) {
       <app-blog-posts-list [posts]="posts"/>
     }
   `,
-  styles: [
-
-  ],
+    styles: []
 })
 export default class BlogComponent implements OnInit, OnDestroy {
   @HostBinding("class.reading-width")

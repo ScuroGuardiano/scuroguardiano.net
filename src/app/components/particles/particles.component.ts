@@ -5,12 +5,11 @@ import IRenderer from './renderer';
 import Canvas2DRenderer from './canvas2d.renderer';
 
 @Component({
-  selector: 'app-particles',
-  standalone: true,
-  imports: [],
-  templateUrl: './particles.component.html',
-  styleUrl: './particles.component.css',
-  host: { ngSkipHydration: 'true' },
+    selector: 'app-particles',
+    imports: [],
+    templateUrl: './particles.component.html',
+    styleUrl: './particles.component.css',
+    host: { ngSkipHydration: 'true' }
 })
 export class ParticlesComponent implements OnDestroy, AfterViewInit {
   constructor() {

@@ -5,10 +5,9 @@ import { Subscription } from 'rxjs';
 import { SeoService } from 'src/app/services/seo.service';
 
 @Component({
-  selector: 'app-projects',
-  standalone: true,
-  imports: [TranslocoPipe],
-  template: `
+    selector: 'app-projects',
+    imports: [TranslocoPipe],
+    template: `
     <h1>{{ "header.projects" | transloco }}</h1>
     <ul>
       <li>
@@ -29,7 +28,7 @@ import { SeoService } from 'src/app/services/seo.service';
       </li>
     </ul>
   `,
-  styles: `
+    styles: `
     ul {
       list-style: none;
       padding: 0;
@@ -38,7 +37,7 @@ import { SeoService } from 'src/app/services/seo.service';
       flex-direction: column;
       gap: .8rem;
     }
-  `,
+  `
 })
 export default class ProjectsComponent implements OnInit, OnDestroy {
   @HostBinding("class.reading-width")

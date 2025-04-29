@@ -6,14 +6,13 @@ import { ImageConversionService } from 'src/app/services/image-conversion.servic
 import ImageConversionRequest from 'src/app/types/image-conversion-request';
 
 @Component({
-  selector: 'app-convert-form',
-  standalone: true,
-  imports: [
-    TranslocoPipe,
-    FormsModule
-  ],
-  templateUrl: './convert-form.component.html',
-  styleUrl: './convert-form.component.scss'
+    selector: 'app-convert-form',
+    imports: [
+        TranslocoPipe,
+        FormsModule
+    ],
+    templateUrl: './convert-form.component.html',
+    styleUrl: './convert-form.component.scss'
 })
 export class ConvertFormComponent {
   file = input.required<File>();

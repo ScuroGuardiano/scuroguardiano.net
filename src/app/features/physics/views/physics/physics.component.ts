@@ -2,9 +2,10 @@ import { Component, inject } from '@angular/core';
 import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
-  selector: 'app-physics',
-  templateUrl: './physics.component.html',
-  styleUrl: './physics.component.scss'
+    selector: 'app-physics',
+    templateUrl: './physics.component.html',
+    styleUrl: './physics.component.scss',
+    standalone: false
 })
 export class PhysicsComponent {
   #transolocoService = inject(TranslocoService);

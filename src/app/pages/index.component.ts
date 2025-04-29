@@ -9,7 +9,6 @@ import { SeoService } from '../services/seo.service';
 
 @Component({
     selector: 'app-home',
-    standalone: true,
     template: `
     <div class="heading">
       <h1>Scuro Guardiano</h1>

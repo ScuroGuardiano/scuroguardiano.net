@@ -4,7 +4,6 @@ import { BlogListElementComponent } from "../blog-list-element/blog-list-element
 
 @Component({
     selector: 'app-blog-posts-list',
-    standalone: true,
     templateUrl: './blog-posts-list.component.html',
     styleUrl: './blog-posts-list.component.css',
     imports: [BlogListElementComponent]

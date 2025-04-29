@@ -8,10 +8,9 @@ import { Title } from '@angular/platform-browser';
 import { SeoService } from 'src/app/services/seo.service';
 
 @Component({
-  selector: 'app-blog-post',
-  standalone: true,
-  imports: [AsyncPipe, TranslocoDatePipe],
-  template: `
+    selector: 'app-blog-post',
+    imports: [AsyncPipe, TranslocoDatePipe],
+    template: `
     @if (post$ | async; as post) {
       <article class="blog-post">
         <h1>{{ post.metadata.languageVersions[0].title }}</h1>
@@ -23,13 +22,13 @@ import { SeoService } from 'src/app/services/seo.service';
       </article>
     }
   `,
-  styles: `
+    styles: `
     :host {
       display: block;
       background-color: var(--bg-2);
       padding: 0 1rem;
     }
-  `,
+  `
 })
 export default class PostComponent implements OnDestroy {
   @HostBinding("class.reading-width")

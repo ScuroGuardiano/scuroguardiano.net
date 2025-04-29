@@ -8,7 +8,6 @@ import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
     selector: 'app-root',
-    standalone: true,
     template: `
 
     @if (!(particlesDisabled$ | async)) {

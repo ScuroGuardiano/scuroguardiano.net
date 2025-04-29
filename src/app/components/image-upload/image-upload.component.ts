@@ -3,14 +3,13 @@ import { Component, computed, EventEmitter, Output, signal } from '@angular/core
 import { TranslocoPipe } from '@ngneat/transloco';
 
 @Component({
-  selector: 'app-image-upload',
-  standalone: true,
-  imports: [
-    NgClass,
-    TranslocoPipe
-  ],
-  templateUrl: './image-upload.component.html',
-  styleUrl: './image-upload.component.scss'
+    selector: 'app-image-upload',
+    imports: [
+        NgClass,
+        TranslocoPipe
+    ],
+    templateUrl: './image-upload.component.html',
+    styleUrl: './image-upload.component.scss'
 })
 export class ImageUploadComponent {
 

@@ -4,9 +4,10 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { map, Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-linear-plot',
-  templateUrl: './linear-plot.component.html',
-  styleUrl: './linear-plot.component.scss',
+    selector: 'app-linear-plot',
+    templateUrl: './linear-plot.component.html',
+    styleUrl: './linear-plot.component.scss',
+    standalone: false
 })
 export class LinearPlotComponent {
   formGroup = new FormGroup({

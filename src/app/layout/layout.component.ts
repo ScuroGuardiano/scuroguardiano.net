@@ -6,7 +6,6 @@ import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 
 @Component({
     selector: 'app-layout',
-    standalone: true,
     templateUrl: './layout.component.html',
     styleUrl: './layout.component.scss',
     imports: [

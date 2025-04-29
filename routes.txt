@@ -1,2 +1,3 @@
+/blog/pl/windows-authentication-asp-net-linux
 /blog/pl/rozpoznawanie-po-nazwie-hosta-pomiedzy-podsieciami
 /blog/en/hostname-resolution-between-subnets
