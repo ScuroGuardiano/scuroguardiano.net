@@ -88,7 +88,7 @@ Umieść ten kod w funkcji main, przed `return 0`:
 	}
 ```
 
-Otwieramy dysk w z flagami:
+Otwieramy dysk z flagami:
 - **`O_RDWR`** - read-write, pozwala zarówno na odczyt, jak i zapisywanie
 - **`O_SYNC`** - zapisy będą synchronizowane od razu na dysk, nie będziemy musieli wpisywać `fsync` po operacjach.
 
@@ -205,7 +205,7 @@ Wypełnij teraz część tablicy GPT odpowiednimi danymi:
 	header.headerSize = 92;			// Rozmiar nagłówka, u nas damy 92 bajty, to minimum
 	header.headerCrc32 = 0;			// CRC domyślnie ustawione na 0
 	header.reserved = 0;			// musi być na zero
-	header.myLba = 1;			// LBA, tutaj będzie 1, dla backupu będzie na odwrót
+	header.myLba = 1;			// LBA, tutaj będzie 1
 	header.alternateLba = (driveSize / sectorSize) - 1; // LBA backupu, jest to ostatni sektor dysku
 	header.firstUsableLba = 2048;		// Taka konwencja czy coś, że dysk ma 1MB przerwy od tablicy do danych. OS może sobie cosik tutaj zapisywać
 	header.lastUsableLba = header.alternateLba - 33; // Ostatni użyteczny LBA, ten przed backupowym headerem. Jest to LBA -34, a że header to -1 to odejmujemy 33
