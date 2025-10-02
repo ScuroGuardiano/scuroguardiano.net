@@ -42,7 +42,7 @@ patrząc na jego rozmiar. Pamiętaj, żeby wziąć dysk, a nie partycję!
 Przy okazji zauważ te 3 partycję - ich właśnie będę chciał się pozbyć.
 
 ## Struktura GPT
-Tablica GPT zajmuje pierwsze 33 sektory na dysku i ostatnie 32 sektory, które są backupem tej tablicy.
+Tablica GPT zajmuje pierwsze 34 sektory na dysku i ostatnie 33 sektory, które są backupem tej tablicy.
 A zatem, żeby wpierw wyczyścić tablicę partycji, musimy wyzerować te sektory. Napiszemy do tego program!
 
 Otwórz edytor neovim i utwórz nowy plik: `neovim gpt.c`. Na samym początku dodaj potrzebne nam biblioteki oraz utwórz pustą funkcję main:
