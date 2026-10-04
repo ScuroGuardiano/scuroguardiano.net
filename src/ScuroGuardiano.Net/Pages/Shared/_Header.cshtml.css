@@ -1,0 +1,73 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    gap: 2rem;
+    background-color: var(--bg-2);
+}
+
+.menu {
+    width: 100%;
+    display: none;
+}
+
+@media (min-width: 800px) {
+    .menu {
+        display: flex;
+    }
+    /*app-hamburger-menu {*/
+    /*    display: none;*/
+    /*}*/
+}
+
+.hmenu {
+    width: 100%;
+    display: block;
+}
+
+.header-right {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.lang-change {
+    display: block;
+    padding: 1rem;
+    margin-left: 1rem;
+    background-color: transparent;
+    color: var(--fg);
+    text-transform: uppercase;
+    font-size: 120%;
+    border: none;
+    cursor: pointer;
+}
+
+.lang-change:hover {
+    background-color: var(--bg-3);
+}
+
+/*app-hamburger-menu {*/
+/*    margin-right: 1rem;*/
+/*}*/
+
+ul {
+    width: 100%;
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+::deep a {
+    display: block;
+    padding: 1rem;
+    text-decoration: none;
+    color: var(--fg);
+    font-size: 120%;
+    transition: background-color .3s;
+}
+
+::deep a:hover {
+    background-color: var(--bg-3);
+}

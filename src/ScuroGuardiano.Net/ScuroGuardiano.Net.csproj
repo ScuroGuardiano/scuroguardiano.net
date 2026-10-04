@@ -72,10 +72,21 @@
       <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\LICENSE.md" />
+      <_ContentIncludedByDefault Remove="Views\_ViewStart.cshtml" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="wwwroot\lib\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="StarFederation.Datastar" Version="1.4.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Pages\Index.cshtml.css">
+        <DependentUpon>Index.cshtml</DependentUpon>
+      </None>
     </ItemGroup>
 
 </Project>

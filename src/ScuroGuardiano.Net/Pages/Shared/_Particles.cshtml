@@ -1,0 +1,18 @@
+@if (ViewData["Particles"] is true)
+{
+    <canvas id="particles" data-ignore-morph></canvas>
+}
+
+<script src="~/js/particles.js" data-ignore-morph></script>
+<script data-ignore-morph>
+    (function() {
+        const particleCanvas = document.getElementById("particles");
+        if (!particleCanvas)
+        {
+            return;
+        }
+
+        const particlesComponent = new ParticleComponent(particleCanvas, 100);
+        particlesComponent.run();
+    })();
+</script>

@@ -1,9 +1,19 @@
 ﻿@page
 @model IndexModel
 @{
-  ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home page";
+    ViewData["Particles"] = true;
 }
 
-<div>
-  <div>Empty page</div>
+<div class="heading">
+    <h1>Scuro Guardiano</h1>
+    <p>Wstaw jakiś edgy tekst tutaj</p>
+    <p>
+        <a href="https://github.com/ScuroGuardiano" class="highlight" target="_blank">Github</a>
+        &middot;
+        Discord: <span class="highlight">scuroguardiano</span>
+    <p>
 </div>
+
+
+<partial name="_Particles"/>
