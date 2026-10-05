@@ -15,6 +15,7 @@ public class DatastarBoostAnchorTagHelper : TagHelper
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
+        output.Attributes.RemoveAll("data-boost");
         // Pozwól ręcznie nadpisać/wyłączyć zachowanie per-link: <a asp-page="X" data-on:click="...">
         if (output.Attributes.ContainsName("data-on:click"))
             return;
@@ -30,7 +31,6 @@ public class DatastarBoostAnchorTagHelper : TagHelper
 
         var expression = $"history.pushState(null, '', '{safeHref}'); @get('{safeHref}')";
 
-        output.Attributes.RemoveAll("data-boost");
         output.Attributes.SetAttribute("data-on:click__prevent", expression);
     }
 }

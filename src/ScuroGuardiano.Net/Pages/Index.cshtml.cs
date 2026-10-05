@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ScuroGuardiano.Net.Plugins;
 using StarFederation.Datastar.DependencyInjection;
 
 namespace ScuroGuardiano.Net.Pages;
@@ -8,7 +9,13 @@ public class IndexModel : PageModel
 {
   public void OnGet()
   {
+      HttpContext.Response.Headers.CacheControl = "public, max-age=3600";
+  }
 
+  public IActionResult OnPostReloadPlugins([FromServices] PluginManager pluginManager)
+  {
+      Task.Run(() => pluginManager.ReloadPluginsFromDirectoryAtRuntime("plugins"));
+      return Content( /*language=javascript*/ "setTimeout(() => window.location.reload(), 5000)", "text/javascript");
   }
 
   public IActionResult OnGetSalami()

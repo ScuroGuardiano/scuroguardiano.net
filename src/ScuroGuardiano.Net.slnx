@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="ScuroGuardiano.Net.Abstractions/ScuroGuardiano.Net.Abstractions.csproj" />
+  <Project Path="ScuroGuardiano.Net.Blog/ScuroGuardiano.Net.Blog.csproj" />
+  <Project Path="ScuroGuardiano.Net.HelloPlugin/ScuroGuardiano.Net.HelloPlugin.csproj" />
   <Project Path="ScuroGuardiano.Net/ScuroGuardiano.Net.csproj" />
 </Solution>

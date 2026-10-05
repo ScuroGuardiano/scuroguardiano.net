@@ -1,12 +1,36 @@
+@using ScuroGuardiano.Net.Abstractions
+@using ScuroGuardiano.Net.Plugins
+@inject PluginManager PluginManager
+
 <li>
-    <a asp-page="/Index" data-boost>Strona Główna</a>
+    <a asp-page="/Index" asp-area="" data-boost>Strona Główna</a>
 </li>
-<li>
-    <a asp-page="Projects/Index" data-boost>Projekty</a>
-</li>
-<li>
-    <a asp-page="Blog/Index" data-boost>Blog</a>
-</li>
+@foreach (var plugin in PluginManager.Plugins)
+{
+    @foreach (var menuEntry in plugin.MenuEntries)
+    {
+        @switch (menuEntry)
+        {
+            case MenuEntry.AspPage aspPage:
+                <li>
+                    <a asp-page="@aspPage.Page" asp-area="@aspPage.Area" data-boost>@menuEntry.Label</a>
+                </li>
+                break;
+
+            case MenuEntry.Link link:
+                <li>
+                    <a href="@link.Url" target="@(link.OpenInNewTab ? "_blank" : null)">@menuEntry.Label</a>
+                </li>
+                break;
+
+            case MenuEntry.PartialElement part:
+                <li>
+                    @await Html.PartialAsync(part.Partial)
+                </li>
+                break;
+        }
+    }
+}
 <li>
     <a href="https://github.com/ScuroGuardiano" target="_blank">Github</a>
 </li>
