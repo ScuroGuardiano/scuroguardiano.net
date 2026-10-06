@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
-using System.Reflection;
 using Microsoft.AspNetCore.ResponseCompression;
 using ScuroGuardiano.Net.Helpers;
 using ScuroGuardiano.Net.Plugins;
@@ -122,15 +121,6 @@ public class PluginAwareApplication
 
         await application.StopAsync(TimeSpan.FromSeconds(30));
         await application.DisposeAsync();
-
-        // await Task.Factory.StartNew(
-        //     async () =>
-        //     {
-        //     },
-        //     CancellationToken.None,
-        //     TaskCreationOptions.DenyChildAttach,
-        //     TaskScheduler.Default
-        // ).Unwrap();
 
         _logger.LogInformation("WebApplication wyłączona.");
     }

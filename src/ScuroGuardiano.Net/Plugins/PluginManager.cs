@@ -369,6 +369,7 @@ public class PluginManager
             }
         }
     }
+
     private class PluginEntry
     {
         /// <summary>
