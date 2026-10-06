@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
+using System.Reflection;
 using Microsoft.AspNetCore.ResponseCompression;
 using ScuroGuardiano.Net.Helpers;
 using ScuroGuardiano.Net.Plugins;
@@ -12,11 +13,13 @@ public class PluginAwareApplication
     public bool IsActive => _webApplication is not null;
     private readonly PluginManager _pluginManager;
     private WebApplication? _webApplication;
+    private ILogger<PluginAwareApplication> _logger;
 
-    public PluginAwareApplication(PluginManager pluginManager)
+    public PluginAwareApplication(PluginManager pluginManager, ILogger<PluginAwareApplication> logger)
     {
         _pluginManager = pluginManager;
         _pluginManager.Application = this;
+        _logger = logger;
     }
 
     public async Task CreateAndStart(string[] args)
@@ -26,6 +29,8 @@ public class PluginAwareApplication
             throw new InvalidOperationException("Application has already been started");
         }
 
+        _logger.LogInformation("Startuję aplikację...");
+
         await Configure(args);
         await Startup();
     }
@@ -34,6 +39,8 @@ public class PluginAwareApplication
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddSingleton(_pluginManager);
+
+        // builder.Services.AddSerilog();
 
         foreach (var plugin in _pluginManager.Plugins)
         {
@@ -83,7 +90,7 @@ public class PluginAwareApplication
 
         var app = _webApplication;
 
-        // Configure the HTTP request pipeline.
+        // app.UseSerilogRequestLogging();
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Error");
@@ -99,29 +106,50 @@ public class PluginAwareApplication
         app.MapRazorPages()
             .WithStaticAssets();
 
-        await app.RunAsync();
+        await app.StartAsync();
     }
 
     public async Task SoftShutdown()
     {
-        if (_webApplication is not null)
+        _logger.LogInformation("Wyłączam WebApplication...");
+
+        var application = Interlocked.Exchange(ref _webApplication, null);
+
+        if (application is null)
         {
-            await _webApplication.StopAsync(TimeSpan.FromSeconds(30));
-            await _webApplication.DisposeAsync();
-            _webApplication = null;
+            return;
         }
+
+        await application.StopAsync(TimeSpan.FromSeconds(30));
+        await application.DisposeAsync();
+
+        // await Task.Factory.StartNew(
+        //     async () =>
+        //     {
+        //     },
+        //     CancellationToken.None,
+        //     TaskCreationOptions.DenyChildAttach,
+        //     TaskScheduler.Default
+        // ).Unwrap();
+
+        _logger.LogInformation("WebApplication wyłączona.");
     }
 
+    // Olej to póki co
     [DoesNotReturn]
     public async void RestartProcess()
     {
         try
         {
+            _logger.LogInformation("Restartuję proces...");
             await SoftShutdown();
         }
         finally
         {
             // TODO: Execve
+            Thread.Sleep(Timeout.Infinite);
+            Environment.Exit(0);
         }
     }
+
 }

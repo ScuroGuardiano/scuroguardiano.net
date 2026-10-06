@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using System.Security.Cryptography;
 using ScuroGuardiano.Net.Abstractions;
@@ -9,15 +11,21 @@ namespace ScuroGuardiano.Net.Plugins;
 
 public class PluginManager
 {
-    public IEnumerable<AbstractPlugin> Plugins => _plugins.Select(pe => pe.Plugin);
+    public IReadOnlyList<AbstractPlugin> Plugins => _plugins.Select(pe => pe.Plugin).ToList();
     public PluginAwareApplication? Application { get; set; }
     private readonly string[] _appArgs;
 
     private readonly List<PluginEntry> _plugins = [];
+    private readonly ILogger<PluginManager> _logger;
+    private readonly string _pluginsDirectory;
 
-    public PluginManager(string[] args)
+    public PluginManager(string[] args, ILogger<PluginManager> logger, string pluginsDirectory)
     {
         _appArgs = args;
+        _logger = logger;
+        _pluginsDirectory = pluginsDirectory;
+
+        Directory.CreateDirectory(pluginsDirectory);
     }
 
     public void RegisterPlugin<TPlugin>()
@@ -30,9 +38,14 @@ public class PluginManager
         });
     }
 
-    public async Task ReloadPluginsFromDirectoryAtRuntime(string directory)
+    public async Task ReloadPluginsAtRuntime()
     {
-        var files = Directory.GetFiles(directory, "*.dll");
+        _logger.LogInformation("Przeładowywanie pluginów w trakcie działania działania aplikacji.");
+
+        var files = Directory.GetFiles(_pluginsDirectory, "*.dll");
+
+        _logger.LogInformation("Znaleziono {FilesLength} pluginów.", files.Length);
+
         foreach (var file in files)
         {
             await using var stream = File.OpenRead(file);
@@ -41,21 +54,52 @@ public class PluginManager
 
         Debug.Assert(Application is not null);
 
+        _logger.LogInformation("Przeładowanie pluginów na gorąco zostało zakończone pomyślnie.");
         if (!Application.IsActive)
         {
             await Application.CreateAndStart(_appArgs);
         }
     }
 
-    public PluginManager PreloadPluginsFromDirectory(string directory)
+    public async Task UnloadAllPlugins()
+    {
+        _logger.LogInformation("Odładowywanie pluginów");
+
+        await Application!.SoftShutdown();
+        var unloadablePlugins = _plugins.Where(pe => pe.AssemblyLoadContext is not null).ToList();
+        for (int i = 0; i < unloadablePlugins.Count; i++)
+        {
+            var pluginEntry = unloadablePlugins[i];
+            string alcName = pluginEntry.AssemblyLoadContext!.Name!;
+            pluginEntry = null;
+            unloadablePlugins[i] = null!;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            await UnloadPlugin(alcName);
+        }
+
+        await Application.CreateAndStart(_appArgs);
+
+        _logger.LogInformation("Pluginy odładowane");
+        // await Task.Factory.StartNew(
+        //     async () =>
+        //     {
+        //     },
+        //     CancellationToken.None,
+        //     TaskCreationOptions.DenyChildAttach,
+        //     TaskScheduler.Default
+        // ).Unwrap();
+    }
+
+    public PluginManager PreloadPlugins()
     {
         if (Application?.IsActive == true)
         {
             throw new InvalidOperationException(
-                $"Metoda {nameof(PreloadPluginsFromDirectory)} może być wywoałana tylko przed startem aplikacji.");
+                $"Metoda {nameof(PreloadPlugins)} może być wywoałana tylko przed startem aplikacji.");
         }
 
-        var files = Directory.GetFiles(directory, "*.dll");
+        var files = Directory.GetFiles(_pluginsDirectory, "*.dll");
         foreach (var file in files)
         {
             using var stream = File.OpenRead(file);
@@ -96,13 +140,19 @@ public class PluginManager
             stream.Seek(0, SeekOrigin.Begin);
             if (existingPlugin.DllSha256Hash == hash)
             {
+                _logger.LogInformation("Plugin {PluginId} ({DllHash}) się nie zmienił. Pomijam.",
+                    existingPlugin.Plugin.Identity.Id, existingPlugin.DllSha256Hash);
                 return; // Ten plugin już jest załadowany, nie musimy preloadować.
             }
         }
 
+        existingPlugin = null;
+
         Debug.Assert(Application is not null);
 
-        if (Application.IsActive == true)
+        _logger.LogInformation("Przeładowuję plugin o nazwie ACL: {AclName}", aclName);
+
+        if (Application.IsActive)
         {
             await Application.SoftShutdown();
         }
@@ -110,6 +160,8 @@ public class PluginManager
         // Jeżeli plugin nie istnieje to UnloadPlugin jest no-opem.
         await UnloadPlugin(aclName);
         await LoadPluginCore(aclName, stream);
+
+        _logger.LogInformation("Przeładowanie pluginu o nazwie ACL: {AclName} zakończone.", aclName);
 
         if (startApplication)
         {
@@ -196,6 +248,10 @@ public class PluginManager
 
     private async Task RegisterPluginAtRuntime(PluginDynamicRegistrationMetadata registrationMetadata)
     {
+        _logger.LogInformation("Rejestruję plugin typu {PluginTypeName} o nazwie ACL {AclName} ({DllSha256}) na gorąco",
+            registrationMetadata.PluginType.FullName, registrationMetadata.AssemblyLoadContext.Name,
+            registrationMetadata.DllSha256Hash);
+
         if (!registrationMetadata.PluginType.IsSubclassOf(typeof(AbstractPlugin)))
         {
             throw new ArgumentException($"Plugin {registrationMetadata.PluginType} is not a subclass of {typeof(AbstractPlugin)}");
@@ -207,23 +263,25 @@ public class PluginManager
             throw new ArgumentException($"Plugin {registrationMetadata.PluginType} is not instantiable");
         }
 
-        // Check if plugin already exists
-        var existingPlugin = _plugins.FirstOrDefault(pe => pe.Plugin.Identity.Id == pluginInstance.Identity.Id);
-        if (existingPlugin is not null)
         {
-            if (existingPlugin.IsRegisterStatically || existingPlugin.AssemblyLoadContext is null)
+            // Check if plugin already exists
+            var existingPlugin = _plugins.FirstOrDefault(pe => pe.Plugin.Identity.Id == pluginInstance.Identity.Id);
+            if (existingPlugin is not null)
             {
-                throw new InvalidOperationException(
-                    $"Plugin o ID {pluginInstance.Identity.Id} jest już zarejestrowany statycznie." +
-                    " Nie można podmienić zarejestrowanego statycznie pluginu na dynamiczny." +
-                    $" Dynamiczny plugin {pluginInstance.Identity.Id} zostaje zignorowany.");
-            }
+                if (existingPlugin.IsRegisterStatically || existingPlugin.AssemblyLoadContext is null)
+                {
+                    throw new InvalidOperationException(
+                        $"Plugin o ID {pluginInstance.Identity.Id} jest już zarejestrowany statycznie." +
+                        " Nie można podmienić zarejestrowanego statycznie pluginu na dynamiczny." +
+                        $" Dynamiczny plugin {pluginInstance.Identity.Id} zostaje zignorowany.");
+                }
 
-            // Jeżeli plugin nie jest zarejestrowany statycznie, to możemy go unloadować
-            // Musimy jednak pozbyć się referencji do niego, bo będzie trzymał ACL-kę.
-            var existingPluginAclName = existingPlugin.AssemblyLoadContext.Name!;
-            existingPlugin = null;
-            await UnloadPlugin(existingPluginAclName);
+                // Jeżeli plugin nie jest zarejestrowany statycznie, to możemy go unloadować
+                // Musimy jednak pozbyć się referencji do niego, bo będzie trzymał ACL-kę.
+                var existingPluginAclName = existingPlugin.AssemblyLoadContext.Name!;
+                existingPlugin = null;
+                await UnloadPlugin(existingPluginAclName);
+            }
         }
 
         _plugins.Add(new PluginEntry
@@ -233,8 +291,14 @@ public class PluginManager
             AssemblyLoadContext = registrationMetadata.AssemblyLoadContext,
             DllSha256Hash = registrationMetadata.DllSha256Hash
         });
+
+        _logger.LogInformation(
+            "Plugin typu {PluginTypeName} o nazwie ACL {AclName} i ID {PluginId} został zarejestrowany",
+            registrationMetadata.PluginType.FullName, registrationMetadata.AssemblyLoadContext.Name,
+            pluginInstance.Identity.Id);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     private async Task UnloadPlugin(string aclName)
     {
         var pluginEntry = _plugins.FirstOrDefault(pe => !pe.IsRegisterStatically && pe.AssemblyLoadContext?.Name == aclName);
@@ -247,10 +311,21 @@ public class PluginManager
         // Zatrzymujemy aplikację, bo ona na pewno trzyma referencję do ACL-ki
         await Application.SoftShutdown();
 
-        var weakAcl = new WeakReference(pluginEntry.AssemblyLoadContext);
+        _logger.LogInformation("Odładowuję ACL-kę {AclName}...", aclName);
         pluginEntry.AssemblyLoadContext!.Unload(); // ACL-ka nigdy nie będzie tu null.
+        var weakAcl = new WeakReference(pluginEntry.AssemblyLoadContext, true);
         _plugins.Remove(pluginEntry);
         pluginEntry = null;
+
+        CollectAssemblyLoadContext(weakAcl);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void CollectAssemblyLoadContext(WeakReference weakAcl)
+    {
+
+        PurgeStaticTypeCache("Microsoft.Extensions.Internal.PropertyHelper", "PropertiesCache",
+            "VisiblePropertiesCache");
 
         for (int i = 0; weakAcl.IsAlive && i < 10; i++)
         {
@@ -260,12 +335,40 @@ public class PluginManager
 
         if (weakAcl.IsAlive)
         {
-            // Coś dalej trzyma referencję do ACL.
-            // SoftRestart aplikacji nie pomoże. Musimy zrestartować cały proces.
-            Application.RestartProcess();
+            _logger.LogError(
+                "Coś trzyma referencję do ALC, uniemożliwiając lekkie przeładowanie. Wymagany jest restart procesu.");
+
+            // Application.RestartProcess();
+        }
+        else
+        {
+            _logger.LogInformation("ALC została odładowana.");
         }
     }
 
+    private void PurgeStaticTypeCache(string typeFullName, params string[] fieldNames)
+    {
+        foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            var type = asm.GetType(typeFullName);
+            if (type is null) continue;
+
+            foreach (var fieldName in fieldNames)
+            {
+                try
+                {
+                    var field = type.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Static);
+                    if (field?.GetValue(null) is System.Collections.IDictionary dict)
+                        dict.Clear();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Nie udało się wyczyścić {Field} z {Type} w {Assembly}",
+                        fieldName, typeFullName, asm.FullName);
+                }
+            }
+        }
+    }
     private class PluginEntry
     {
         /// <summary>

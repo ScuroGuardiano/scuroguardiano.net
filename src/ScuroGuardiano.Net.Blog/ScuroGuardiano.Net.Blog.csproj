@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+    <PropertyGroup>
+        <TargetFramework>net11.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App">
+            <Private>false</Private>
+            <ExcludeAssets>true</ExcludeAssets>
+        </FrameworkReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ScuroGuardiano.Net.Abstractions\ScuroGuardiano.Net.Abstractions.csproj">
+          <Private>false</Private>
+          <ExcludeAssets>true</ExcludeAssets>
+      </ProjectReference>
+    </ItemGroup>
+
+</Project>

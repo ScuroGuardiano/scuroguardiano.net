@@ -4,6 +4,10 @@
         <TargetFramework>net11.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <OutputType>exe</OutputType>
+        <PublishSingleFile>true</PublishSingleFile>
+<!--        <PublishReadyToRun>true</PublishReadyToRun>-->
+        <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
     </PropertyGroup>
 
     <ItemGroup>
@@ -26,6 +30,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Serilog" Version="4.4.0" />
+      <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+      <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
+      <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
       <PackageReference Include="StarFederation.Datastar" Version="1.4.0" />
     </ItemGroup>
 

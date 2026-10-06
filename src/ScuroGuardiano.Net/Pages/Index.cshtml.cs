@@ -5,6 +5,7 @@ using StarFederation.Datastar.DependencyInjection;
 
 namespace ScuroGuardiano.Net.Pages;
 
+[IgnoreAntiforgeryToken]
 public class IndexModel : PageModel
 {
   public void OnGet()
@@ -14,8 +15,29 @@ public class IndexModel : PageModel
 
   public IActionResult OnPostReloadPlugins([FromServices] PluginManager pluginManager)
   {
-      Task.Run(() => pluginManager.ReloadPluginsFromDirectoryAtRuntime("plugins"));
-      return Content( /*language=javascript*/ "setTimeout(() => window.location.reload(), 5000)", "text/javascript");
+      using (ExecutionContext.SuppressFlow())
+      {
+          Task.Run(pluginManager.UnloadAllPlugins);
+      }
+      return Content(
+          /*language=javascript*/
+          """
+          (async () => {
+              while (true) {
+                  await new Promise(r => setTimeout(r, 1000));
+                  try {
+                      if ((await fetch('/', { method: 'GET' })).ok) {
+                          window.location.reload();
+                          break;
+                      }
+                  }
+                  catch {}
+                  await new Promise(r => setTimeout(r, 1000));
+              }
+          })()
+          """,
+          "text/javascript"
+      );
   }
 
   public IActionResult OnGetSalami()
