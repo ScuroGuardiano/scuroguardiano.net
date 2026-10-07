@@ -15,6 +15,8 @@ public class PluginManager
     public PluginAwareApplication? Application { get; set; }
     private readonly string[] _appArgs;
 
+    private HashSet<WeakReference> _unloadingALCs = new();
+
     private readonly List<PluginEntry> _plugins = [];
     private readonly ILogger<PluginManager> _logger;
     private readonly string _pluginsDirectory;
@@ -40,11 +42,11 @@ public class PluginManager
 
     public async Task ReloadPluginsAtRuntime()
     {
-        _logger.LogInformation("Przeładowywanie pluginów w trakcie działania działania aplikacji.");
+        _logger.LogInformation("Przeładowywanie pluginów w trakcie działania działania aplikacji");
 
         var files = Directory.GetFiles(_pluginsDirectory, "*.dll");
 
-        _logger.LogInformation("Znaleziono {FilesLength} pluginów.", files.Length);
+        _logger.LogInformation("Znaleziono {FilesLength} pluginów", files.Length);
 
         foreach (var file in files)
         {
@@ -54,7 +56,7 @@ public class PluginManager
 
         Debug.Assert(Application is not null);
 
-        _logger.LogInformation("Przeładowanie pluginów na gorąco zostało zakończone pomyślnie.");
+        _logger.LogInformation("Przeładowanie pluginów na gorąco zostało zakończone pomyślnie");
         if (!Application.IsActive)
         {
             await Application.CreateAndStart(_appArgs);
@@ -63,7 +65,7 @@ public class PluginManager
 
     public async Task UnloadAllPlugins()
     {
-        _logger.LogInformation("Odładowywanie pluginów");
+        _logger.LogInformation("Odładowywanie pluginów...");
 
         await Application!.SoftShutdown();
         var unloadablePlugins = _plugins.Where(pe => pe.AssemblyLoadContext is not null).ToList();
@@ -81,14 +83,6 @@ public class PluginManager
         await Application.CreateAndStart(_appArgs);
 
         _logger.LogInformation("Pluginy odładowane");
-        // await Task.Factory.StartNew(
-        //     async () =>
-        //     {
-        //     },
-        //     CancellationToken.None,
-        //     TaskCreationOptions.DenyChildAttach,
-        //     TaskScheduler.Default
-        // ).Unwrap();
     }
 
     public PluginManager PreloadPlugins()
@@ -140,7 +134,7 @@ public class PluginManager
             stream.Seek(0, SeekOrigin.Begin);
             if (existingPlugin.DllSha256Hash == hash)
             {
-                _logger.LogInformation("Plugin {PluginId} ({DllHash}) się nie zmienił. Pomijam.",
+                _logger.LogInformation("Plugin {PluginId} ({DllHash}) się nie zmienił. Pomijam",
                     existingPlugin.Plugin.Identity.Id, existingPlugin.DllSha256Hash);
                 return; // Ten plugin już jest załadowany, nie musimy preloadować.
             }
@@ -161,7 +155,7 @@ public class PluginManager
         await UnloadPlugin(aclName);
         await LoadPluginCore(aclName, stream);
 
-        _logger.LogInformation("Przeładowanie pluginu o nazwie ACL: {AclName} zakończone.", aclName);
+        _logger.LogInformation("Przeładowanie pluginu o nazwie ACL: {AclName} zakończone", aclName);
 
         if (startApplication)
         {
@@ -336,13 +330,13 @@ public class PluginManager
         if (weakAcl.IsAlive)
         {
             _logger.LogError(
-                "Coś trzyma referencję do ALC, uniemożliwiając lekkie przeładowanie. Wymagany jest restart procesu.");
+                "Coś trzyma referencję do ALC, uniemożliwiając lekkie przeładowanie. Wymagany jest restart procesu");
 
             // Application.RestartProcess();
         }
         else
         {
-            _logger.LogInformation("ALC została odładowana.");
+            _logger.LogInformation("ALC została odładowana");
         }
     }
 

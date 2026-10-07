@@ -3,6 +3,7 @@ using System.IO.Compression;
 using Microsoft.AspNetCore.ResponseCompression;
 using ScuroGuardiano.Net.Helpers;
 using ScuroGuardiano.Net.Plugins;
+using ScuroGuardiano.Phoenix;
 using StarFederation.Datastar.DependencyInjection;
 
 namespace ScuroGuardiano.Net;
@@ -125,7 +126,6 @@ public class PluginAwareApplication
         _logger.LogInformation("WebApplication wyłączona.");
     }
 
-    // Olej to póki co
     [DoesNotReturn]
     public async void RestartProcess()
     {
@@ -133,13 +133,16 @@ public class PluginAwareApplication
         {
             _logger.LogInformation("Restartuję proces...");
             await SoftShutdown();
+            if (!OperatingSystem.IsLinux())
+            {
+                throw new InvalidOperationException("Jebać OS bez execve");
+            }
+            SacrificialArson.Instance.SelfExecve();
         }
-        finally
+        catch (Exception ex)
         {
-            // TODO: Execve
-            Thread.Sleep(Timeout.Infinite);
-            Environment.Exit(0);
+            _logger.LogError(ex, "Fuck: {ExceptionMessage}", ex.ToString());
+            Environment.Exit(1);
         }
     }
-
 }
