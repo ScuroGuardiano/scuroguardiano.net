@@ -4,25 +4,46 @@ using Microsoft.AspNetCore.ResponseCompression;
 using ScuroGuardiano.Net.Helpers;
 using ScuroGuardiano.Net.Plugins;
 using ScuroGuardiano.Phoenix;
+using Serilog;
 using StarFederation.Datastar.DependencyInjection;
 
 namespace ScuroGuardiano.Net;
 
-public class PluginAwareApplication
+public class RestartableApplication
 {
     public bool IsActive => _webApplication is not null;
+
     private readonly PluginManager _pluginManager;
     private WebApplication? _webApplication;
-    private ILogger<PluginAwareApplication> _logger;
+    private readonly ILogger<RestartableApplication> _logger;
+    private readonly string[] _args;
+    private bool _restarting = false;
 
-    public PluginAwareApplication(PluginManager pluginManager, ILogger<PluginAwareApplication> logger)
+    public RestartableApplication(string[] args, PluginManager pluginManager, ILogger<RestartableApplication> logger)
     {
+        _args = args.ToArray();
         _pluginManager = pluginManager;
-        _pluginManager.Application = this;
         _logger = logger;
     }
 
-    public async Task CreateAndStart(string[] args)
+    public void RequestSoftRestart()
+    {
+        var restarting = Interlocked.Exchange(ref _restarting, true);
+        if (restarting)
+        {
+            return;
+        }
+        using (ExecutionContext.SuppressFlow())
+        {
+            _ = Task.Run(async () =>
+            {
+                await SoftShutdown();
+                await CreateAndStart();
+            });
+        }
+    }
+
+    public async Task CreateAndStart()
     {
         if (IsActive)
         {
@@ -31,16 +52,17 @@ public class PluginAwareApplication
 
         _logger.LogInformation("Startuję aplikację...");
 
-        await Configure(args);
+        await Configure();
         await Startup();
     }
 
-    public async Task Configure(string[] args)
+    public async Task Configure()
     {
-        var builder = WebApplication.CreateBuilder(args);
+        var builder = WebApplication.CreateBuilder(_args);
         builder.Services.AddSingleton(_pluginManager);
+        builder.Services.AddSingleton(this);
 
-        // builder.Services.AddSerilog();
+        builder.Services.AddSerilog();
 
         foreach (var plugin in _pluginManager.Plugins)
         {
@@ -90,7 +112,7 @@ public class PluginAwareApplication
 
         var app = _webApplication;
 
-        // app.UseSerilogRequestLogging();
+        app.UseSerilogRequestLogging();
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Error");
@@ -109,7 +131,7 @@ public class PluginAwareApplication
         await app.StartAsync();
     }
 
-    public async Task SoftShutdown()
+    private async Task SoftShutdown()
     {
         _logger.LogInformation("Wyłączam WebApplication...");
 
@@ -123,7 +145,7 @@ public class PluginAwareApplication
         await application.StopAsync(TimeSpan.FromSeconds(30));
         await application.DisposeAsync();
 
-        _logger.LogInformation("WebApplication wyłączona.");
+        _logger.LogInformation("WebApplication wyłączona");
     }
 
     [DoesNotReturn]

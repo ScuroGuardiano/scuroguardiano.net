@@ -6,7 +6,7 @@ namespace ScuroGuardiano.Net.Plugins;
 /// <summary>
 /// Nie bój się, dobrze wykorzystam Twoje zwłoki
 /// </summary>
-internal class PluginGraveyard
+public sealed class PluginGraveyard
 {
     private readonly ConcurrentDictionary<int, GraveyardEntry> _deadPlugins = new();
     private int _lastIdx = 0;

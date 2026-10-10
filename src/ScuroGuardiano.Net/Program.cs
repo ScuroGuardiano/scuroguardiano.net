@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using ScuroGuardiano.Net;
+using ScuroGuardiano.Net.Helpers;
 using ScuroGuardiano.Net.Plugins;
 using Serilog;
 using Serilog.Events;
@@ -14,15 +15,12 @@ Log.Logger = new LoggerConfiguration()
 
 using var loggerFactory = new SerilogLoggerFactory(Log.Logger);
 
-var pluginManager = new PluginManager(args, loggerFactory.CreateLogger<PluginManager>(), "/home/scuroguardiano/projects/scuroguardiano.net/src/ScuroGuardiano.Net/bin/Release/net11.0/linux-x64/publish/plugins/");
-pluginManager.PreloadPlugins();
+EvilSoftRestartCleanupHacks.BindLogger(loggerFactory.CreateLogger<EvilSoftRestartCleanupHacks>());
+var pluginManager = new PluginManager(loggerFactory.CreateLogger<PluginManager>(), "/home/scuroguardiano/projects/scuroguardiano.net/src/ScuroGuardiano.Net/bin/Release/net11.0/linux-x64/publish/plugins/");
+pluginManager.ReloadPluginsAtRuntime();
 
-var app = new PluginAwareApplication(pluginManager, loggerFactory.CreateLogger<PluginAwareApplication>());
-await app.CreateAndStart(args);
+var app = new RestartableApplication(args, pluginManager, loggerFactory.CreateLogger<RestartableApplication>());
+await app.CreateAndStart();
 
 // Żeby po wyjściu głównego wątku proces nie zdechł
-using (ExecutionContext.SuppressFlow())
-{
-    await Task.Delay(10000);
-    await Task.Delay(Timeout.Infinite);
-}
+await Task.Delay(Timeout.Infinite);

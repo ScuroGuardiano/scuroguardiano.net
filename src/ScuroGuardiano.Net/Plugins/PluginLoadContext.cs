@@ -8,7 +8,7 @@ using ScuroGuardiano.Net.Extensions;
 
 namespace ScuroGuardiano.Net.Plugins;
 
-internal class PluginLoadContext : AssemblyLoadContext
+public class PluginLoadContext : AssemblyLoadContext
 {
     private PluginLoadContext(string name, string dllSha256Hash) : base(name, isCollectible: true)
     {
@@ -33,6 +33,11 @@ internal class PluginLoadContext : AssemblyLoadContext
     public Type PluginType { get; private set; } = null!;
 
     private Assembly? _assembly;
+
+    public AbstractPlugin InstantiatePlugin()
+    {
+        return (Activator.CreateInstance(PluginType) as AbstractPlugin)!;
+    }
 
     /// <summary>
     /// Ładuje nową assembly pluginu tylko jeżeli DLL-ka ze strumienia się zmieniła
@@ -91,7 +96,7 @@ internal class PluginLoadContext : AssemblyLoadContext
     public new WeakReference Unload()
     {
         base.Unload();
-        return new WeakReference(_assembly, true);
+        return new WeakReference(this, true);
     }
 
     private Assembly LoadFromStreamProxy(Stream stream)
