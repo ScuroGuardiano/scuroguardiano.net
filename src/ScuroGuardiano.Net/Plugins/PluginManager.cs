@@ -62,7 +62,7 @@ public sealed class PluginManager
         // Musimy tutaj zrobić kopię pluginów, które odładowujemy
         // Bo metoda UnloadPlugin usuwa wpis z listy _plugins
         var unloadablePlugins = _plugins
-            .Where(pe => pe.IsRegisterStatically)
+            .Where(pe => !pe.IsRegisterStatically)
             .ToList();
 
         for (int i = 0; i < unloadablePlugins.Count; i++)

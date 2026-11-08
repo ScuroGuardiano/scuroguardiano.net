@@ -39,6 +39,7 @@ public class RestartableApplication
             {
                 await SoftShutdown();
                 await CreateAndStart();
+                Interlocked.Exchange(ref _restarting, false);
             });
         }
     }
@@ -63,20 +64,18 @@ public class RestartableApplication
         builder.Services.AddSingleton(this);
 
         builder.Services.AddSerilog();
+        var mvcBuilder = builder.Services.AddRazorPages();
 
         foreach (var plugin in _pluginManager.Plugins)
         {
+            _logger.LogInformation("Registering plugin {Plugin}...", plugin.GetType().FullName);
+
             builder.Services.AddSingleton(plugin.GetType(), plugin);
             builder.Services.AddKeyedSingleton(plugin, plugin.Identity.Id);
-            await plugin.RegisterServicesAsync(builder.Services);
             await plugin.ConfigureAsync(builder.Services, builder.Configuration);
-        }
-
-        var mvcBuilder = builder.Services.AddRazorPages();
-        foreach (var plugin in _pluginManager.Plugins)
-        {
-            Console.WriteLine($"Registering plugin { plugin.Identity.Name }");
             mvcBuilder.AddApplicationPart(plugin.GetType().Assembly);
+
+            _logger.LogInformation("Registered plugin {Plugin}", plugin.GetType().FullName);
         }
 
         builder.Services.AddDatastar();
@@ -144,6 +143,7 @@ public class RestartableApplication
 
         await application.StopAsync(TimeSpan.FromSeconds(30));
         await application.DisposeAsync();
+        EvilSoftRestartCleanupHacks.PurgePropertyHelperStaticTypeCache();
 
         _logger.LogInformation("WebApplication wyłączona");
     }

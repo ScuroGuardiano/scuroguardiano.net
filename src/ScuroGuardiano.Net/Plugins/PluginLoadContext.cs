@@ -95,6 +95,7 @@ public class PluginLoadContext : AssemblyLoadContext
     /// <returns><see cref="WeakReference"/> do tej instancji</returns>
     public new WeakReference Unload()
     {
+        _assembly = null;
         base.Unload();
         return new WeakReference(this, true);
     }

@@ -1,9 +1,8 @@
 using System.Reflection;
-using Serilog.Extensions.Logging;
 
 namespace ScuroGuardiano.Net.Helpers;
 
-internal class EvilSoftRestartCleanupHacks
+internal abstract class EvilSoftRestartCleanupHacks
 {
     private static ILogger<EvilSoftRestartCleanupHacks>? _logger;
 
@@ -12,6 +11,21 @@ internal class EvilSoftRestartCleanupHacks
         _logger = logger;
     }
 
+    // ReSharper disable once InvalidXmlDocComment
+    /// <summary>
+    /// Czyści statyczny cache z klasy <see cref="Microsoft.Extensions.Internal.PropertyHelper"/>
+    /// </summary>
+    public static void PurgePropertyHelperStaticTypeCache()
+    {
+        PurgeStaticTypeCache("Microsoft.Extensions.Internal.PropertyHelper", "PropertiesCache",
+            "VisiblePropertiesCache");
+    }
+
+    /// <summary>
+    /// Czyści statyczne cache, które sobie Microsoft wymyślił.
+    /// </summary>
+    /// <param name="typeFullName"></param>
+    /// <param name="fieldNames"></param>
     public static void PurgeStaticTypeCache(string typeFullName, params string[] fieldNames)
     {
         foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())

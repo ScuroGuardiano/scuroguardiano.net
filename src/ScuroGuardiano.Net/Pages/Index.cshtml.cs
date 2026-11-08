@@ -13,12 +13,11 @@ public class IndexModel : PageModel
       HttpContext.Response.Headers.CacheControl = "public, max-age=3600";
   }
 
-  public IActionResult OnPostReloadPlugins([FromServices] PluginManager pluginManager)
+  public IActionResult OnPostReloadPlugins([FromServices] PluginManager pluginManager, [FromServices] RestartableApplication application)
   {
-      using (ExecutionContext.SuppressFlow())
-      {
-          Task.Run(pluginManager.UnloadAllPlugins);
-      }
+      pluginManager.UnloadAllPlugins();
+      application.RequestSoftRestart();
+
       return Content(
           /*language=javascript*/
           """

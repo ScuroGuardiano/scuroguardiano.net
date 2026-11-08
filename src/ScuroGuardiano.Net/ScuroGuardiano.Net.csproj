@@ -46,6 +46,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ScuroGuardiano.Net.Abstractions\ScuroGuardiano.Net.Abstractions.csproj" />
+      <ProjectReference Include="..\ScuroGuardiano.Net.Blog\ScuroGuardiano.Net.Blog.csproj" />
     </ItemGroup>
 
 </Project>
