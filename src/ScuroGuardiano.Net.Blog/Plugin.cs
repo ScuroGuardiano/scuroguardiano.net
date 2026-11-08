@@ -25,7 +25,7 @@ public class Plugin : AbstractPlugin
             .ValidateOnStart();
 
         services.AddSingleton<MarkdownParser>();
-        services.AddSingleton<Services.BlogIndexer>();
+        services.AddSingleton<BlogIndexer>();
         services.AddSingleton(new SlugifierBuilder()
             .CollapseReplacement()
             .Build()
