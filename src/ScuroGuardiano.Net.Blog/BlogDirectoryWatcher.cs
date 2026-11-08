@@ -37,7 +37,14 @@ internal class BlogDirectoryWatcher : BackgroundService
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            var result = _watcher.WaitForChanged(WatcherChangeTypes.All);
+            // Watcher słucha synchronicznie i powoduje opóźnienie w wyłączeniu aplikacji aż do jej timeoutu.
+            // Więc muszę dodać tutaj timeout, żeby watcher mógł sprawdzić czy akcja stopu nie została wywołana.
+            var result = _watcher.WaitForChanged(WatcherChangeTypes.All, TimeSpan.FromSeconds(1));
+            if (result.TimedOut)
+            {
+                continue;
+            }
+
             if (postsDirectory != _blogOptions.PostsDirectory)
             {
                 // folder postów się zmienił, zignoruj zmiany i zmień katalog watchera
@@ -49,30 +56,42 @@ internal class BlogDirectoryWatcher : BackgroundService
                 continue;
             }
 
-            if (result.Name is null)
+            try
             {
-                continue;
+                await HandleChange(result);
             }
-
-            switch (result.ChangeType)
+            catch (Exception ex)
             {
-                case WatcherChangeTypes.Created:
-                case WatcherChangeTypes.Changed:
-                    await _blogIndexer.UpdateOrAddAsync(result.Name);
-                    break;
-
-                case WatcherChangeTypes.Deleted:
-                    _blogIndexer.Remove(result.Name);
-                    break;
-
-                case WatcherChangeTypes.Renamed when result.OldName is not null:
-                    await _blogIndexer.RenameAsync(result.OldName, result.Name);
-                    break;
-
-                case WatcherChangeTypes.All:
-                default:
-                    throw new ArgumentOutOfRangeException();
+                _logger.LogError(ex, "Wystąpił błąd podczas obsługi zmiany w folderze postów: {ExceptionStringified}", ex.ToString());
             }
+        }
+    }
+
+    private async Task HandleChange(WaitForChangedResult result)
+    {
+        if (result.Name is null)
+        {
+            return;
+        }
+
+        switch (result.ChangeType)
+        {
+            case WatcherChangeTypes.Created:
+            case WatcherChangeTypes.Changed:
+                await _blogIndexer.UpdateOrAddAsync(result.Name);
+                break;
+
+            case WatcherChangeTypes.Deleted:
+                _blogIndexer.Remove(result.Name);
+                break;
+
+            case WatcherChangeTypes.Renamed when result.OldName is not null:
+                await _blogIndexer.RenameAsync(result.OldName, result.Name);
+                break;
+
+            case WatcherChangeTypes.All:
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 

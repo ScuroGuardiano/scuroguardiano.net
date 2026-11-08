@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using ScuroGuardiano.Net.Abstractions;
 using ScuroGuardiano.Slugify;
 
@@ -31,6 +32,18 @@ public class Plugin : AbstractPlugin
         services.AddHostedService<BlogDirectoryWatcher>();
 
         return Task.CompletedTask;
+    }
+
+    public override async Task BeforeStartAsync(IServiceProvider services)
+    {
+        var blogPostsDirectory = services.GetRequiredService<IOptions<BlogOptions>>().Value.PostsDirectory;
+        if (!Directory.Exists(blogPostsDirectory))
+        {
+            Directory.CreateDirectory(blogPostsDirectory);
+        }
+
+        var blogIndexer = services.GetRequiredService<BlogIndexer>();
+        await blogIndexer.IndexAsync();
     }
 
     public override IEnumerable<MenuEntry> MenuEntries

@@ -179,9 +179,10 @@ internal partial class BlogIndexer : IDisposable
         var posts = new ConcurrentDictionary<string, BlogPost>();
         var fileToSlugMapping = new Dictionary<string, string>();
 
-        foreach (var file in Directory.EnumerateFiles(_options.PostsDirectory, "*.md"))
+        foreach (var filePath in Directory.EnumerateFiles(_options.PostsDirectory, "*.md"))
         {
             cancellationToken.ThrowIfCancellationRequested();
+            var file = Path.GetFileName(filePath);
 
             try
             {
@@ -214,7 +215,9 @@ internal partial class BlogIndexer : IDisposable
     private async Task<BlogPost?> GetPostHeader(string file, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        var content = await File.ReadAllTextAsync(file, cancellationToken);
+
+        var postPath = Path.Combine(_options.PostsDirectory, file);
+        var content = await File.ReadAllTextAsync(postPath, cancellationToken);
         var frontMatter = _markdownParser.DeserializeFrontMatter<BlogPostFrontMatter>(content);
         if (frontMatter is null)
         {

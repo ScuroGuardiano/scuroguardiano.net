@@ -11,9 +11,11 @@ namespace ScuroGuardiano.Net;
 
 public class RestartableApplication
 {
+    [MemberNotNullWhen(true, nameof(_webApplication))]
     public bool IsActive => _webApplication is not null;
 
     private readonly PluginManager _pluginManager;
+
     private WebApplication? _webApplication;
     private readonly ILogger<RestartableApplication> _logger;
     private readonly string[] _args;
@@ -102,6 +104,24 @@ public class RestartableApplication
         _webApplication = builder.Build();
     }
 
+    public async Task WaitForShutdown()
+    {
+        while (IsActive)
+        {
+            await _webApplication.WaitForShutdownAsync();
+            await Task.Delay(TimeSpan.FromMicroseconds(1337));
+            if (!_restarting)
+            {
+                return;
+            }
+
+            while (_restarting)
+            {
+                await Task.Delay(TimeSpan.FromMicroseconds(2137));
+            }
+        }
+    }
+
     public async Task Startup()
     {
         if (_webApplication is null)
@@ -126,6 +146,11 @@ public class RestartableApplication
         app.MapStaticAssets();
         app.MapRazorPages()
             .WithStaticAssets();
+
+        foreach (var plugin in _pluginManager.Plugins)
+        {
+            await plugin.BeforeStartAsync(app.Services);
+        }
 
         await app.StartAsync();
     }

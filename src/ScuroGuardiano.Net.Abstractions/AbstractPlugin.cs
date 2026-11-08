@@ -13,5 +13,10 @@ public abstract class AbstractPlugin
         return Task.CompletedTask;
     }
 
+    public virtual Task BeforeStartAsync(IServiceProvider services)
+    {
+        return Task.CompletedTask;
+    }
+
     public virtual IEnumerable<MenuEntry> MenuEntries { get; } = [];
 }
