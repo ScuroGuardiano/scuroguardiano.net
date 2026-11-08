@@ -2,6 +2,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using ScuroGuardiano.Net.Abstractions;
+using ScuroGuardiano.Net.Blog.BackgroundJobs;
+using ScuroGuardiano.Net.Blog.Services;
 using ScuroGuardiano.Slugify;
 
 namespace ScuroGuardiano.Net.Blog;
@@ -23,7 +25,7 @@ public class Plugin : AbstractPlugin
             .ValidateOnStart();
 
         services.AddSingleton<MarkdownParser>();
-        services.AddSingleton<BlogIndexer>();
+        services.AddSingleton<Services.BlogIndexer>();
         services.AddSingleton(new SlugifierBuilder()
             .CollapseReplacement()
             .Build()
@@ -42,7 +44,7 @@ public class Plugin : AbstractPlugin
             Directory.CreateDirectory(blogPostsDirectory);
         }
 
-        var blogIndexer = services.GetRequiredService<BlogIndexer>();
+        var blogIndexer = services.GetRequiredService<Services.BlogIndexer>();
         await blogIndexer.IndexAsync();
     }
 

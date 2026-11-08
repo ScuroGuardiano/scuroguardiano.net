@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace ScuroGuardiano.Net.Blog;
+namespace ScuroGuardiano.Net.Blog.Services;
 
 internal partial class BlogIndexer
 {

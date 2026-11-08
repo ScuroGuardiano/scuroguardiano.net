@@ -1,18 +1,19 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using ScuroGuardiano.Net.Blog.Services;
 
-namespace ScuroGuardiano.Net.Blog;
+namespace ScuroGuardiano.Net.Blog.BackgroundJobs;
 
 internal class BlogDirectoryWatcher : BackgroundService
 {
-    private readonly BlogIndexer _blogIndexer;
+    private readonly Services.BlogIndexer _blogIndexer;
     private BlogOptions _blogOptions;
     private readonly IDisposable? _optionsSubscription;
     private FileSystemWatcher? _watcher;
     private readonly ILogger<BlogDirectoryWatcher> _logger;
 
-    public BlogDirectoryWatcher(BlogIndexer blogIndexer, IOptionsMonitor<BlogOptions> blogOptions, ILogger<BlogDirectoryWatcher> logger)
+    public BlogDirectoryWatcher(Services.BlogIndexer blogIndexer, IOptionsMonitor<BlogOptions> blogOptions, ILogger<BlogDirectoryWatcher> logger)
     {
         _blogIndexer = blogIndexer;
         _logger = logger;

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using ScuroGuardiano.Net.Blog.Model;
 using ScuroGuardiano.Slugify;
 
-namespace ScuroGuardiano.Net.Blog;
+namespace ScuroGuardiano.Net.Blog.Services;
 
 /// <summary>
 /// Zasrany clusterfuck, który powinien być thread safe, bo jest przeznaczony do rejestracji jako singleton.

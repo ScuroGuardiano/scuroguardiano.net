@@ -7,7 +7,7 @@ using YamlDotNet.Serialization.NamingConventions;
 using IYamlDeserializer = YamlDotNet.Serialization.IDeserializer;
 using YamlDeserializerBuilder = YamlDotNet.Serialization.DeserializerBuilder;
 
-namespace ScuroGuardiano.Net.Blog;
+namespace ScuroGuardiano.Net.Blog.Services;
 
 public class MarkdownParser
 {

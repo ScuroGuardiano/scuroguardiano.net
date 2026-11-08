@@ -1,4 +1,4 @@
-namespace ScuroGuardiano.Net.Blog;
+namespace ScuroGuardiano.Net.Blog.Services;
 
 public class MarkdownParserOptions
 {
