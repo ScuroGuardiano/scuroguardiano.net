@@ -146,8 +146,8 @@ internal class BlogDirectoryWatcher : BackgroundService
     {
         base.Dispose();
         _optionsSubscription?.Dispose();
-        _pendingChanges.DisposeAll();
         ExecuteTask?.Wait(TimeSpan.FromSeconds(5));
+        _pendingChanges.DisposeAll();
         _watcher?.Dispose();
     }
 
